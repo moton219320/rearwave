@@ -12,10 +12,25 @@
     <artifactId>blog-rest-server</artifactId>
 
     <dependencies>
+        <!--业务系统内部组件-->
         <dependency>
             <groupId>com.rearwave</groupId>
             <artifactId>blog-component</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rearwave</groupId>
+            <artifactId>blog-platform</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!--springboot web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
     <build>
