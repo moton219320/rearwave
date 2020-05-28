@@ -1,0 +1,49 @@
+server:
+  port: 9999
+  servlet:
+    context-path: /api
+spring:
+  profiles:
+    active: ${config.env}
+  datasource:
+    name: rearwave
+    url:  jdbc:mysql://127.0.0.1:3306/rearwave?useSSL=false&characterEncoding=utf8
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      active-connections: 100
+      validation-query: SELECT 'X'
+      default-auto-commit: true
+      query-timeout: 30000
+      min-idle: 5
+      max-active: 30
+      name: rear-wave
+      initial-size: 3
+      kill-when-socket-read-timeout: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB  #设置支持的单个上传文件大小
+      max-request-size: 6MB  #设置最大的请求文件大小，设置总体大小的请求
+      file-size-threshold: 512KB #当上传文件达到指定配置量的时候，会将文件内容写入到磁盘
+      location: /mnt/upload/tmp   #设置上传文件的临时目录
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*/*.xml
+  typeAliasesPackage: com.rearwave.blog.*.dao
+  global-config:
+    #数据库大写下划线转换
+    capital-mode: false
+    #删除
+    logic-delete-value: 1
+    #不删除
+    logic-not-delete-value: 0
+    #动态刷新mapper
+    refresh-mapper: true
+
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+

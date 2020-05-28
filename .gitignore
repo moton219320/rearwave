@@ -13,3 +13,8 @@ buildNumber.properties
 /**/*.iml
 /**/test/
 /**/target/
+
+# 前端文件过滤
+/**/node_modules/
+/**/dist
+/**/build
