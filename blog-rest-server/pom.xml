@@ -15,12 +15,7 @@
         <!--业务系统内部组件-->
         <dependency>
             <groupId>com.rearwave</groupId>
-            <artifactId>blog-component</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rearwave</groupId>
-            <artifactId>blog-platform</artifactId>
+            <artifactId>blog-platform-baidu</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <!--springboot web-->

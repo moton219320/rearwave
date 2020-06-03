@@ -30,5 +30,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+
+        <!--自身业务组件-->
+        <dependency>
+            <groupId>com.rearwave</groupId>
+            <artifactId>blog-component</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 </project>

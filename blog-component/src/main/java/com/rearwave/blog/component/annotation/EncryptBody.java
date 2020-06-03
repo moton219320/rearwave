@@ -1,5 +1,7 @@
 package com.rearwave.blog.component.annotation;
 
+import com.rearwave.blog.component.enums.PlatformEnum;
+
 import java.lang.annotation.*;
 
 /**
@@ -10,4 +12,6 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EncryptBody {
+
+    PlatformEnum value() default PlatformEnum.BLOG;
 }
