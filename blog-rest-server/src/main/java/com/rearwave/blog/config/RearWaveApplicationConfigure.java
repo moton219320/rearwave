@@ -64,7 +64,7 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
 
     /**
      * 自定义消息序列化工具 本项目使用Gson作为序列化工具
-     * @param converters
+     * @param converters 消息转换器
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -72,7 +72,7 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
         gsonHttpMessageConverter.setDefaultCharset(StandardCharsets.UTF_8);
         //设置支持的媒体类型
         gsonHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON
-                ,MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON_UTF8,MediaType.TEXT_PLAIN));
+                ,MediaType.APPLICATION_FORM_URLENCODED,MediaType.TEXT_PLAIN));
 
        converters.add(gsonHttpMessageConverter);
     }

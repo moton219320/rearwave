@@ -21,7 +21,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="分类">
+                            <el-form-item label="分类" >
                                 <el-select v-model="search.category" placeholder="选择分类">
                                     <el-option label="全部" value="0"></el-option>
                                     <el-option
@@ -48,7 +48,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="10">
+                        <el-col :span="8">
                             <el-form-item label="发布时间">
                                 <el-date-picker
                                         v-model="search.date"
@@ -62,7 +62,7 @@
                                 </el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="8">
                             <div style="width: 100%;height: 1px"></div>
                         </el-col>
                         <el-col :span="4">
@@ -249,4 +249,10 @@
 </script>
 
 <style scoped>
+.el-button{
+    margin-left: 5px;
+}
+.el-form-item__content{
+    margin-left: 10px !important;
+}
 </style>

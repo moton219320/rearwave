@@ -17,19 +17,19 @@
             <el-col :span="20">
                 <el-form ref="form" :model="search" label-width="80px" >
                     <el-row :gutter="10">
-                        <el-col :span="8">
+                        <el-col :span="6">
                             <el-form-item label="字典名称">
                                 <el-input v-model="search.dicName" placeholder="输入字典名称" prefix-icon="el-icon-search"
                                           style="margin-left: 5px"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="6">
                             <el-form-item label="字典分类">
                                 <el-input v-model="search.dicType" placeholder="输入字典分类" prefix-icon="el-icon-search"
                                           style="margin-left: 5px"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="12">
                             <el-button type="primary" @click="query('form')" style="margin-left: 30px">查询字典</el-button>
                             <el-button type="info" @click="add('form1')">添加字典</el-button>
                         </el-col>
