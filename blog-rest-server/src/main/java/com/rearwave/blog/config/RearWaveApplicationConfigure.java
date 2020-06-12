@@ -1,5 +1,6 @@
 package com.rearwave.blog.config;
 
+import com.rearwave.blog.config.interceptor.RequestMethodInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -29,6 +30,11 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new RequestMethodInterceptor())
+                /** 拦截所有地址 */
+                .addPathPatterns("/**")
+                /** 放行门户页、回调接口以及登录注册相关接口 */
+                .excludePathPatterns("/api/**","/callback/**","/auth/**");
     }
 
     /**
@@ -56,9 +62,14 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
+                .allowedHeaders("*")
                 .allowedMethods("GET","POST","OPTIONS")
-                .exposedHeaders("*")
-                .allowCredentials(true)
+                .exposedHeaders("access-control-allow-headers",
+                        "access-control-allow-methods",
+                        "access-control-allow-origin",
+                        "access-control-max-age",
+                        "X-Frame-Options")
+                .allowCredentials(false)
                 .maxAge(3600);
     }
 

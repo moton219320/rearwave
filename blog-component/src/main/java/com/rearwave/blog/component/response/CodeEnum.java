@@ -17,8 +17,12 @@ public enum CodeEnum {
      * 通用失败
      */
     FAIL(999,"%s"),
+
+    TIME_OUT(201,"登录超时"),
     ;
     private int code;
 
     private String msg;
+
+
 }

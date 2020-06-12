@@ -12,6 +12,8 @@ MySQL - 5.7.24 : Database - rearwave
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`rearwave` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+
 /*Table structure for table `t_rearwave_article` */
 
 CREATE TABLE `t_rearwave_article` (
@@ -20,20 +22,23 @@ CREATE TABLE `t_rearwave_article` (
   `title` varchar(64) DEFAULT NULL COMMENT '标题',
   `content` text COMMENT '内容 type为1时是图文内容，2时是视频地址，3时是图集的地址数组，4时是碎语内容',
   `is_original` int(1) DEFAULT NULL COMMENT '是否原创 0 不是  1 是',
-  `abstract` varchar(64) DEFAULT NULL COMMENT '摘要',
+  `abstract_text` varchar(64) DEFAULT NULL COMMENT '摘要',
   `status` int(1) DEFAULT NULL COMMENT '状态 0 草稿 1 发布',
   `sync_status` int(1) DEFAULT NULL COMMENT '同步状态 0 未同步 1 已同步',
   `category` int(11) DEFAULT NULL COMMENT '文章分类 对应分类表的id',
   `tags` varchar(50) DEFAULT NULL COMMENT '文章标签 格式如 1,2,3',
   `cover_iamges` varchar(150) DEFAULT NULL COMMENT '封面图，对应封面图的id 格式如 1,2,3',
-  `view_count` int(11) DEFAULT NULL COMMENT '阅读次数',
-  `reply_count` int(11) DEFAULT NULL COMMENT '评论次数',
+  `view_count` int(11) DEFAULT '0' COMMENT '阅读次数',
+  `like_count` int(11) DEFAULT '0' COMMENT '点赞次数',
+  `reply_count` int(11) DEFAULT '0' COMMENT '评论次数',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `create_user` int(11) DEFAULT NULL COMMENT '创建人id',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `update_user` int(11) DEFAULT NULL COMMENT '更新人id',
   PRIMARY KEY (`id_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
+
+/*Data for the table `t_rearwave_article` */
 
 /*Table structure for table `t_rearwave_attach` */
 
@@ -49,6 +54,84 @@ CREATE TABLE `t_rearwave_attach` (
   PRIMARY KEY (`id_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='附件表';
 
+/*Data for the table `t_rearwave_attach` */
+
+/*Table structure for table `t_rearwave_book` */
+
+CREATE TABLE `t_rearwave_book` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `title` varchar(100) DEFAULT NULL COMMENT '书名',
+  `cover_image` varchar(255) DEFAULT NULL COMMENT '封面',
+  `author` varchar(50) DEFAULT NULL COMMENT '作者',
+  `category_id` varchar(20) DEFAULT NULL COMMENT '分类类别',
+  `recommend` tinyint(1) DEFAULT '0' COMMENT '是否推荐',
+  `publisher` varchar(100) DEFAULT NULL COMMENT '出版社',
+  `publish_date` date DEFAULT NULL COMMENT '出版日期',
+  `page_num` int(11) DEFAULT NULL COMMENT '页数',
+  `grade` double DEFAULT NULL COMMENT '评分',
+  `description` text COMMENT '简介',
+  `catalogue` text COMMENT '原书目录',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `read_count` int(11) DEFAULT '0' COMMENT '阅读量',
+  `reply_count` int(11) DEFAULT '0' COMMENT '评论量',
+  `like_count` int(11) DEFAULT '0' COMMENT '点赞量',
+  `publish` tinyint(1) DEFAULT '0' COMMENT '是否发布',
+  `progress` int(11) DEFAULT '0' COMMENT '读书状态',
+  `reading` tinyint(1) DEFAULT NULL COMMENT '是否阅读',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='图书表';
+
+/*Data for the table `t_rearwave_book` */
+
+/*Table structure for table `t_rearwave_book_chapter` */
+
+CREATE TABLE `t_rearwave_book_chapter` (
+  `id_` int(11) NOT NULL AUTO_INCREMENT COMMENT '章节id',
+  `book_id` int(11) DEFAULT NULL COMMENT '图书id',
+  `chapter` varchar(30) DEFAULT NULL COMMENT '章节名称',
+  `content` text COMMENT '章节内容',
+  `view_count` int(11) DEFAULT NULL COMMENT '阅读次数',
+  `like_count` int(11) DEFAULT NULL COMMENT '点赞次数',
+  `reply_count` int(11) DEFAULT NULL COMMENT '评论次数',
+  `create_time` datetime DEFAULT NULL,
+  `create_user` int(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `update_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='图书表';
+
+/*Data for the table `t_rearwave_book_chapter` */
+
+/*Table structure for table `t_rearwave_book_feel` */
+
+CREATE TABLE `t_rearwave_book_feel` (
+  `id_` int(11) NOT NULL AUTO_INCREMENT,
+  `book_id` int(11) DEFAULT NULL COMMENT '图书id',
+  `content` text COMMENT '感受',
+  `create_time` datetime DEFAULT NULL,
+  `create_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='读后感';
+
+/*Data for the table `t_rearwave_book_feel` */
+
+/*Table structure for table `t_rearwave_book_note` */
+
+CREATE TABLE `t_rearwave_book_note` (
+  `id_` int(11) DEFAULT NULL,
+  `book_id` int(11) DEFAULT NULL COMMENT '图书id',
+  `chapter_id` int(11) DEFAULT NULL COMMENT '章节id',
+  `comment` varchar(200) DEFAULT NULL COMMENT '笔记内容',
+  `reply_id` int(11) DEFAULT NULL COMMENT '回复笔记id',
+  `create_time` datetime DEFAULT NULL,
+  `create_user` int(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `update_user` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='图书笔记表';
+
+/*Data for the table `t_rearwave_book_note` */
+
 /*Table structure for table `t_rearwave_category` */
 
 CREATE TABLE `t_rearwave_category` (
@@ -58,6 +141,8 @@ CREATE TABLE `t_rearwave_category` (
   `create_user` int(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `t_rearwave_category` */
 
 /*Table structure for table `t_rearwave_comments` */
 
@@ -74,6 +159,8 @@ CREATE TABLE `t_rearwave_comments` (
   PRIMARY KEY (`id_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+/*Data for the table `t_rearwave_comments` */
+
 /*Table structure for table `t_rearwave_config` */
 
 CREATE TABLE `t_rearwave_config` (
@@ -83,6 +170,23 @@ CREATE TABLE `t_rearwave_config` (
   `type` int(11) DEFAULT NULL COMMENT '0 后台 1 前台 2 第三方',
   PRIMARY KEY (`id_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统配置表';
+
+/*Data for the table `t_rearwave_config` */
+
+/*Table structure for table `t_rearwave_dic` */
+
+CREATE TABLE `t_rearwave_dic` (
+  `dic_name` varchar(20) NOT NULL COMMENT '字典名称',
+  `key` varchar(10) NOT NULL COMMENT 'key 数据库存储的代码',
+  `value` varchar(30) NOT NULL COMMENT 'value 实际显示的内容',
+  `status` int(1) NOT NULL DEFAULT '1' COMMENT '0 无效 1 有效',
+  KEY `status` (`status`),
+  FULLTEXT KEY `dic_name` (`dic_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `t_rearwave_dic` */
+
+insert  into `t_rearwave_dic`(`dic_name`,`key`,`value`,`status`) values ('articleType','1','图文',1),('articleType','2','视频',1),('articleType','3','图集',1),('articleType','4','碎语',1),('effectStatus','0','无效',1),('effectStatus','1','正常',1);
 
 /*Table structure for table `t_rearwave_link` */
 
@@ -96,6 +200,8 @@ CREATE TABLE `t_rearwave_link` (
   `description` varchar(255) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='友情链接表';
+
+/*Data for the table `t_rearwave_link` */
 
 /*Table structure for table `t_rearwave_logs` */
 
@@ -114,6 +220,8 @@ CREATE TABLE `t_rearwave_logs` (
   PRIMARY KEY (`id_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+/*Data for the table `t_rearwave_logs` */
+
 /*Table structure for table `t_rearwave_social_config` */
 
 CREATE TABLE `t_rearwave_social_config` (
@@ -126,9 +234,11 @@ CREATE TABLE `t_rearwave_social_config` (
   `enable` smallint(6) NOT NULL DEFAULT '0' COMMENT '是否启用 0 不启用 1 启用',
   `is_home` smallint(6) DEFAULT '0' COMMENT '是否主页社交信息 0 不是 1 是',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户表社交信息表';
+
+/*Data for the table `t_rearwave_social_config` */
 
 /*Table structure for table `t_rearwave_tags` */
 
@@ -140,6 +250,8 @@ CREATE TABLE `t_rearwave_tags` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `t_rearwave_tags` */
 
 /*Table structure for table `t_rearwave_users` */
 
@@ -169,6 +281,8 @@ CREATE TABLE `t_rearwave_users` (
   UNIQUE KEY `username_idx` (`username`),
   UNIQUE KEY `email_idx` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+/*Data for the table `t_rearwave_users` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
