@@ -25,7 +25,7 @@ import java.util.List;
 @Log4j2
 @WebFilter(urlPatterns = "/*",filterName = "authFilter",
         initParams = {
-        @WebInitParam(name = "ignoreUri",value = "/api/**,/callback/**,/auth/**")
+        @WebInitParam(name = "ignoreUri",value = "/api/**,/callback/**,/auth/**,/*.ico")
 })
 public class AuthFilter implements Filter {
     /**

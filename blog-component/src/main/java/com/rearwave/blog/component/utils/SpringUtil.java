@@ -1,8 +1,8 @@
 package com.rearwave.blog.component.utils;
 
 import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -14,10 +14,9 @@ import org.springframework.util.StringValueResolver;
  * @author sunyi
  */
 @Component
-public class SpringUtil implements ApplicationContextAware, EmbeddedValueResolverAware {
+public class SpringUtil implements BeanFactoryAware, EmbeddedValueResolverAware {
 
-    private static ApplicationContext context;
-
+    private static BeanFactory beanFactory;
     private static StringValueResolver stringValueResolver;
 
     /**
@@ -25,10 +24,7 @@ public class SpringUtil implements ApplicationContextAware, EmbeddedValueResolve
      * @param applicationContext
      * @throws BeansException
      */
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
-    }
+
 
 
     /**
@@ -47,8 +43,8 @@ public class SpringUtil implements ApplicationContextAware, EmbeddedValueResolve
      * @return
      */
     public static <T> T getBean(Class<T> target){
-        Assert.notNull(context,"ApplicationContext must be not null");
-        return context.getBean(target);
+        Assert.notNull(beanFactory,"beanFactory must be not null");
+        return beanFactory.getBean(target);
     }
 
     /**
@@ -59,5 +55,10 @@ public class SpringUtil implements ApplicationContextAware, EmbeddedValueResolve
     public static String getProperty(String key){
         Assert.notNull(stringValueResolver,"stringValueResolver must be not null");
         return stringValueResolver.resolveStringValue(String.format("${%s}", key));
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        SpringUtil.beanFactory = beanFactory;
     }
 }

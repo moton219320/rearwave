@@ -2,9 +2,16 @@ package com.rearwave.blog.config;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
+import com.rearwave.blog.admin.dao.ConfigMapper;
 import com.rearwave.blog.component.spring.handler.BlogArgumentMethodResolver;
+import com.rearwave.blog.component.utils.GSON;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -14,19 +21,27 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * web程序的核心配置，配置拦截器、解析器、序列化工具等
  * @author sunyi
  */
+@Log4j2
 @Configuration
-public class RearWaveApplicationConfigure implements WebMvcConfigurer {
+public class RearWaveApplicationConfigure implements WebMvcConfigurer{
 
 
+    @Autowired
+    private ConfigurableEnvironment environment;
+    @Autowired
+    private ConfigMapper configMapper;
     /**
      * 添加自定义拦截器
      * @param registry
@@ -108,5 +123,20 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
         return defaultKaptcha;
     }
 
+    @PostConstruct
+    public void initSysConfig(){
+        MutablePropertySources propertySources = environment.getPropertySources();
+
+        List<com.rearwave.blog.admin.model.Config> configs = configMapper.selectList(null);
+        Map<String,String> conf = configs.stream()
+                .collect(Collectors
+                        .toMap(com.rearwave.blog.admin.model.Config::getConfigKey,
+                                com.rearwave.blog.admin.model.Config::getConfigValue)) ;
+        Properties properties = new Properties();
+        properties.putAll(conf);
+        PropertiesPropertySource sysConf = new PropertiesPropertySource("rearwave.config",properties);
+        propertySources.addLast(sysConf);
+        log.debug("加载全局配置 - {}", GSON.toJSONString(properties));
+    }
 
 }

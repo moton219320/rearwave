@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IArticleService extends IService<Article> {
 
+    boolean saveArticle(Article article);
+
 }

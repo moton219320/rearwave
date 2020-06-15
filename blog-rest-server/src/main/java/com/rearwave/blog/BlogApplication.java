@@ -26,4 +26,6 @@ public class BlogApplication {
         SpringApplication.run(BlogApplication.class,args);
         System.err.println("------------------系统启动成功------------------");
     }
+
+
 }
