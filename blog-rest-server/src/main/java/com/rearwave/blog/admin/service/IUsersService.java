@@ -2,6 +2,7 @@ package com.rearwave.blog.admin.service;
 
 import com.rearwave.blog.admin.model.Users;
 import com.baomidou.mybatisplus.service.IService;
+import com.rearwave.blog.model.dto.ForgotDto;
 
 /**
  * <p>
@@ -13,4 +14,10 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IUsersService extends IService<Users> {
 
+
+    /**
+     * @param forgotDto 请求对象
+     * @return 重置密码地址
+     */
+    String forgotPass(ForgotDto forgotDto);
 }

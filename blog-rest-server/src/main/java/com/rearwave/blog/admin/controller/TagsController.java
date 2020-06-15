@@ -5,10 +5,7 @@ import com.rearwave.blog.admin.model.Tags;
 import com.rearwave.blog.admin.service.ITagsService;
 import com.rearwave.blog.component.response.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -30,5 +27,9 @@ public class TagsController {
         return R.success(tags.insertOrUpdate());
     }
 
+    @GetMapping("/view/{id}")
+    public Object get(@PathVariable String id){
+        return R.success(tagsService.selectById(id));
+    }
 }
 

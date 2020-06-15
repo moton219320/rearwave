@@ -22,4 +22,8 @@ public class GlobalException extends RuntimeException {
         super(codeEnum.getMsg());
         this.r = R.error(codeEnum);
     }
+
+    public GlobalException(Throwable cause) {
+        super(cause);
+    }
 }

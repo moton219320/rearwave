@@ -1,0 +1,5 @@
+#自定义配置
+
+rearwave:
+  admin:
+    baseDomain: http://platform-admin.rearwave.com/

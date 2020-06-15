@@ -25,6 +25,8 @@ public enum  PlatformEnum {
     WECHAT,
     /*博客*/
     BLOG,
+    /** 第三方API */
+    API,
     ;
 
 }
