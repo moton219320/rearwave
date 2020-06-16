@@ -14,10 +14,8 @@ service.interceptors.request.use(config => {
 //添加response拦截器
 service.interceptors.response.use(
     response => {
-        let res = {};
-        res.status = response.status;
-        res.data = response.data;
-        return res;
+        let {data} = response;
+        return data;
     },
     error => {
         if (error.response && error.response.status == 404) {
@@ -53,6 +51,19 @@ export function post(url, data = {}) {
         data: data
     };
     sendObject.data = JSON.stringify(data);
+    return service(sendObject)
+}
+
+export function upload(url,file = {}){
+    //默认配置
+    let sendObject = {
+        url: url,
+        method: "post",
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        data: file
+    };
     return service(sendObject)
 }
 
@@ -98,9 +109,9 @@ function render(url, data) {
 
 const fetch = (options) => {
     //process.env.VUE_APP_PATH为环境变量在.env文件中配置
-    let url = process.env.VUE_APP_PATH + options.url;
+    let url = options.url;
     url = render(url, options.data)
-    switch (options.method.toUpperCase()) {
+    switch (options.type.toUpperCase()) {
         case 'GET':
             return get(url, options.data)
         case 'POST':
@@ -117,13 +128,13 @@ const fetch = (options) => {
 }
 
 /**
- * 提供一个http方法
+ * 提供一个ajax方法
  * url 访问路径 不包括域名和项目名
  * data 参数对象
  * method 请求方式
  *  */
-export function http(url = '', data = {}, method = "GET") {
-    const options = { url: url, data: data, method: method }
+export function ajax(options = {url:'',type :"GET", data : {}}) {
+    options.url = getUrl(options.url);
     return fetch(options).catch(error => {
         console.log(error)
         throw error
@@ -135,5 +146,6 @@ export function http(url = '', data = {}, method = "GET") {
  */
 export function getUrl(url = '') {
     //process.env.VUE_APP_PATH为环境变量在.env文件中配置
+    console.log("request url is \"%s\"",process.env.VUE_APP_PATH + url);
     return process.env.VUE_APP_PATH + url;
 }

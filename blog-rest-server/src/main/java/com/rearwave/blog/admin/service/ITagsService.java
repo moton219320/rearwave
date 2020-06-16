@@ -2,6 +2,8 @@ package com.rearwave.blog.admin.service;
 
 import com.rearwave.blog.admin.model.Tags;
 import com.baomidou.mybatisplus.service.IService;
+import com.rearwave.blog.model.Page;
+import com.rearwave.blog.model.dto.TagsQueryDto;
 
 /**
  * <p>
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface ITagsService extends IService<Tags> {
 
+
+    Page<Tags> selectPage(TagsQueryDto query);
 }

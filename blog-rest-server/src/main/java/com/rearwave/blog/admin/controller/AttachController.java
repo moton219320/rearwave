@@ -4,12 +4,11 @@ package com.rearwave.blog.admin.controller;
 import com.rearwave.blog.admin.model.Attach;
 import com.rearwave.blog.admin.service.IAttachService;
 import com.rearwave.blog.component.response.R;
+import com.rearwave.blog.component.utils.SpringUtil;
 import com.rearwave.blog.component.utils.WebUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +29,8 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/attach")
-@DependsOn({"rearWaveApplicationConfigure"})
 public class AttachController {
 
-    @Value("${uploadDir}")
-    private String uploadDir;
     @Autowired
     private IAttachService attachService;
 
@@ -44,6 +40,8 @@ public class AttachController {
         if (file.isEmpty()){
             return R.error("文件上传失败");
         }
+        String uploadDir = SpringUtil.getProperty("uploadDir");
+
         String filename = file.getOriginalFilename();
         String ext = filename.substring(filename.lastIndexOf(".")+1);
         String name = DigestUtils.md5DigestAsHex(file.getBytes());

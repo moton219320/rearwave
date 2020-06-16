@@ -24,7 +24,7 @@
         </el-form>
         <el-divider></el-divider>
         <el-table
-                :data="[{ date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄' }, { date: '2016-05-04', name: '王小虎', address: '上海市普陀区金沙江路 1517 弄' }]"
+                :data="search.rows"
                 style="width: 100%;margin-top: 20px">
           <el-table-column
                   prop="index"
@@ -90,6 +90,8 @@
 </template>
 
 <script>
+    import api from "../../../assets/js/api"
+    import {ajax} from "../../../assets/js/ajax"
     export default {
         name: "Tags",
         data(){
@@ -99,8 +101,9 @@
               tagName:'',
               pageNum:1,
               pageSize:10,
-              total:129,
+              total:0,
               pages:0,
+              rows:[]
             },
             form:{
               tagName:'',
@@ -114,6 +117,9 @@
             }
           }
         },
+        mounted(){
+          this.query();
+        },
         methods:{
           submit(){
 
@@ -125,18 +131,40 @@
             this.dialogVisible=false;
             this.$message("操作取消")
           },
+          query(){
+            ajax({
+              url:api.tags.query.uri,
+              type:"POST",
+              data:this.search
+            }).then(res=>{
+              this.search = res.data;
+            })
+          },
           saveTag(flag){
             if(!flag){
               this.$message("操作取消")
               this.dialogVisible=false;
               return
             }
-            this.$notify({
-              title:"标签保存成功",
-              message:"您可以在创作文章的时候指定对应的标签哦",
-              duration:1500
+            ajax({
+              url:api.tags.save.uri,
+              type:"POST",
+              data:this.form
+            }).then(res => {
+              if (res.code === 200) {
+                this.$notify({
+                  title:"标签保存成功",
+                  message:"您可以在创作文章的时候指定对应的标签哦",
+                  duration:1500
+                })
+                this.dialogVisible=false;
+                //刷新列表
+                this.query();
+              }else{
+                this.$alert(res.msg);
+              }
             })
-            this.dialogVisible=false;
+
           },delTag(row){
             this.$confirm('确认删除标签【'+row.name+"】？", '提示', {
               confirmButtonText: '确定',

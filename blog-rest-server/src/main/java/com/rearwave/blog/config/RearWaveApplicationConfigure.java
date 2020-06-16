@@ -1,17 +1,13 @@
 package com.rearwave.blog.config;
 
+import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
-import com.rearwave.blog.admin.dao.ConfigMapper;
 import com.rearwave.blog.component.spring.handler.BlogArgumentMethodResolver;
-import com.rearwave.blog.component.utils.GSON;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -21,13 +17,10 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * web程序的核心配置，配置拦截器、解析器、序列化工具等
@@ -35,13 +28,9 @@ import java.util.stream.Collectors;
  */
 @Log4j2
 @Configuration
-public class RearWaveApplicationConfigure implements WebMvcConfigurer{
+public class RearWaveApplicationConfigure implements WebMvcConfigurer {
 
 
-    @Autowired
-    private ConfigurableEnvironment environment;
-    @Autowired
-    private ConfigMapper configMapper;
     /**
      * 添加自定义拦截器
      * @param registry
@@ -110,33 +99,24 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer{
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();
         properties.setProperty("kaptcha.border", "yes");
-        properties.setProperty("kaptcha.border.color", "105,179,90");
-        properties.setProperty("kaptcha.textproducer.font.color", "blue");
-        properties.setProperty("kaptcha.image.width", "110");
-        properties.setProperty("kaptcha.image.height", "40");
+        properties.setProperty("kaptcha.border.color", "gray");
+        properties.setProperty("kaptcha.textproducer.font.color", "orange");
+        properties.setProperty("kaptcha.image.width", "120");
+        properties.setProperty("kaptcha.image.height", "39");
+        properties.setProperty("kaptcha.noise.color","white");
         properties.setProperty("kaptcha.textproducer.font.size", "30");
         properties.setProperty("kaptcha.session.key", "code");
-        properties.setProperty("kaptcha.textproducer.char.length", "4");
+        properties.setProperty("kaptcha.textproducer.char.length", "6");
         properties.setProperty("kaptcha.textproducer.font.names", "宋体,楷体,微软雅黑");
         Config config = new Config(properties);
         defaultKaptcha.setConfig(config);
         return defaultKaptcha;
     }
 
-    @PostConstruct
-    public void initSysConfig(){
-        MutablePropertySources propertySources = environment.getPropertySources();
 
-        List<com.rearwave.blog.admin.model.Config> configs = configMapper.selectList(null);
-        Map<String,String> conf = configs.stream()
-                .collect(Collectors
-                        .toMap(com.rearwave.blog.admin.model.Config::getConfigKey,
-                                com.rearwave.blog.admin.model.Config::getConfigValue)) ;
-        Properties properties = new Properties();
-        properties.putAll(conf);
-        PropertiesPropertySource sysConf = new PropertiesPropertySource("rearwave.config",properties);
-        propertySources.addLast(sysConf);
-        log.debug("加载全局配置 - {}", GSON.toJSONString(properties));
+    @Bean
+    @ConditionalOnClass(PaginationInterceptor.class)
+    public PaginationInterceptor paginationInterceptor(){
+        return new PaginationInterceptor();
     }
-
 }

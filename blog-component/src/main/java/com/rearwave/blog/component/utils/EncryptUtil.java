@@ -24,4 +24,9 @@ public final class EncryptUtil {
 
         return DigestUtils.md5DigestAsHex((encPd + salt).getBytes(StandardCharsets.UTF_8));
     }
+
+
+    public static void main(String[] args) {
+        System.out.println(encryptPassword("123456","admin"));
+    }
 }
