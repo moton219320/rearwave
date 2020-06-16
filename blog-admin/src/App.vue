@@ -5,18 +5,18 @@
                 <el-row :gutter="10">
                     <el-col :span="20">
                         <div class="el-page-header__left" style="width: 200px">
-                            <a href="http://rearwave.com" target="_blank"><img src="./assets/logo1.png" height="80px" alt="LOGO"></a>
+                            <a href="http://rearwave.com" target="_blank"><img src="./assets/logo.png" height="80px" alt="LOGO"></a>
                         </div>
                     </el-col>
                     <el-col :span="4">
                         <div style="vertical-align: middle;height: 100%; ">
-                            <img src="./images/avatar.jpg"  @click="handleAvatar"
+                            <el-image :src="user.avatar"  @click="handleAvatar"
                                  style="width: 40px;height: 40px;margin-top:20px;border-radius: 20px"
-                                 alt="avatar">
+                                 alt="avatar" />
                             <el-dropdown >
 
                                 <span class="el-dropdown-link">
-                                    {{user.username}}
+                                    {{user.nikename}}
                                     <i class="el-icon-s-operation"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
@@ -82,9 +82,10 @@
             showMenu() {
                 this.headerMenu = !this.headerMenu;
             },
-            loginSuccess(isLogin) {
-                console.log("isLogin  %s", isLogin)
-                this.login = isLogin;
+            loginSuccess(user) {
+                console.log("isLogin  %s", user.isLogin)
+                this.login = user.isLogin;
+                this.user = user;
                 this.$router.push("/meter");
             },
             logout(e) {
@@ -117,6 +118,14 @@
             } catch (e) {
                 console.error(e)
             }
+        },
+        mounted() {
+            console.table(localStorage.getItem("user"))
+            if (localStorage.getItem("user")){
+                this.login = true;
+                this.user = JSON.parse(localStorage.getItem("user"));
+            }
+
         }
     }
 </script>

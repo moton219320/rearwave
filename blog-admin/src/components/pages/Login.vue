@@ -39,7 +39,8 @@
                 form: {
                     username: '',
                     password: '',
-                    verifyCode:''
+                    verifyCode:'',
+                    token:''
                 },
 
                 // 表单验证，需要在 el-form-item 元素中增加 prop 属性
@@ -66,15 +67,18 @@
                     url:api.auth.verifyCode.url,
                     type:"GET"
                 }).then(res => {
-                    this.verifyImg = res.data;
+                    this.form.token = res.data.token
+                    this.verifyImg = res.data.img;
                 })
             },
             onSubmit(formName) {
                 // 为表单绑定验证功能
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        let enc = base64.encode(this.form)
-                        console.log(this.form + "" + enc)
+                        let data = JSON.stringify(this.form);
+                        let enc = base64.encode(data)
+                        console.log(data)
+                        console.log(enc)
                         ajax({
                             url:api.auth.login.url,
                             type:"POST",
@@ -83,7 +87,11 @@
 
                             if (res.code === 200) {
                                 // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
-                                this.$emit("loginSuccess",true)
+                                let user = res.data;
+                                user.isLogin = true;
+                                localStorage.setItem("token",user.token);
+                                localStorage.setItem("user",JSON.stringify(user));
+                                this.$emit("loginSuccess",user)
                                 this.$notify({
                                     title:"登录成功",
                                     message:"您已成功登录系统，现在可以发表文章啦！！",

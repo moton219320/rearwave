@@ -13,6 +13,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -53,9 +54,11 @@ public class AuthFilter implements Filter {
         AuthUserDto user = WebUtils.getCurrentUser();
         if (null == user){
             log.debug("未登录，不允许访问接口.用户IP：{}",req.getRemoteAddr());
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().println(GSON.toJSONString(R.error(CodeEnum.TIME_OUT)));
+            HttpServletResponse resp = (HttpServletResponse) response;
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setHeader("Access-Control-Allow-Origin","*");
+            resp.getWriter().println(GSON.toJSONString(R.error(CodeEnum.TIME_OUT)));
             return;
         }
         chain.doFilter(req,response);

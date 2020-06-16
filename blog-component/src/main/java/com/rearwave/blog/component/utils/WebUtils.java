@@ -22,7 +22,7 @@ public final class WebUtils {
 
     public static Integer getUserId(){
         AuthUserDto user = getCurrentUser();
-       return user == null ? null:user.getId();
+       return user == null ? null:user.getUserId();
     }
 
 
@@ -38,6 +38,6 @@ public final class WebUtils {
 
 
     public static String getSessionId(){
-        return getCurrentRequest().getRequestedSessionId();
+        return getCurrentRequest().getSession().getId();
     }
 }

@@ -17,7 +17,7 @@
       <el-col :span="20">
         <el-form ref="form" :model="search" label-width="60px" class="el-form--inline el-tabs--left" >
           <el-form-item label="标签">
-            <el-input v-model="search.tagName" placeholder="输入标签名称"  prefix-icon="el-icon-search" style="margin-left: 5px"></el-input>
+            <el-input v-model="search.name" placeholder="输入标签名称"  prefix-icon="el-icon-search" style="margin-left: 5px"></el-input>
           </el-form-item>
           <el-button type="primary" @submit="submit('form')" style="margin-left: 30px">查询标签</el-button>
           <el-button type="info" @click="dialogVisible=true">添加标签</el-button>
@@ -27,7 +27,7 @@
                 :data="search.rows"
                 style="width: 100%;margin-top: 20px">
           <el-table-column
-                  prop="index"
+                  prop="id"
                   label="序号"
                   align="center"
                   width="180">
@@ -39,8 +39,9 @@
                   width="180">
           </el-table-column>
           <el-table-column
-                  prop="date"
+                  prop="createTime"
                   align="center"
+                  :formatter="format"
                   label="创建时间">
           </el-table-column>
           <el-table-column
@@ -78,7 +79,7 @@
           <el-input v-model="form.tagId" placeholder="placeholder" type="hidden"></el-input>
         </el-from-item>
         <el-form-item label="标签名称" prop="tagName">
-            <el-input v-model="form.tagName" placeholder="请输入标签名称"></el-input>
+            <el-input v-model="form.name" placeholder="请输入标签名称"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -92,13 +93,14 @@
 <script>
     import api from "../../../assets/js/api"
     import {ajax} from "../../../assets/js/ajax"
+    import {formatDate} from "../../../assets/js/util"
     export default {
         name: "Tags",
         data(){
           return {
             dialogVisible:false,
             search:{
-              tagName:'',
+              name:'',
               pageNum:1,
               pageSize:10,
               total:0,
@@ -106,12 +108,12 @@
               rows:[]
             },
             form:{
-              tagName:'',
-              tagId:null
+              name:'',
+              id:null
             },
             dialogTitle:'添加标签',
             rules:{
-              tagName:[
+              name:[
                   {required: true,message:"标签名称不能为空",trigger:'blur'}
                 ]
             }
@@ -124,10 +126,13 @@
           submit(){
 
           },
+          format(row,col,v){
+            return formatDate(v);
+          },
           handleClose(done){
             console.log(done)
-            this.form.tagId=null;
-            this.form.tagName='';
+            this.form.id=null;
+            this.form.name='';
             this.dialogVisible=false;
             this.$message("操作取消")
           },
@@ -159,6 +164,7 @@
                 })
                 this.dialogVisible=false;
                 //刷新列表
+                this.form = {}
                 this.query();
               }else{
                 this.$alert(res.msg);
@@ -184,8 +190,8 @@
           },editTag(row){
             console.log(row)
             this.dialogTitle="编辑标签";
-            this.form.tagName=row.name
-            this.form.tagId=row.id;
+            this.form.name=row.name
+            this.form.id=row.id;
             this.dialogVisible=true;
           }
         }

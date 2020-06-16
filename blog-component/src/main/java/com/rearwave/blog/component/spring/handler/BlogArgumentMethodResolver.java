@@ -3,6 +3,7 @@ package com.rearwave.blog.component.spring.handler;
 import com.rearwave.blog.component.annotation.DecryptBody;
 import com.rearwave.blog.component.enums.PlatformEnum;
 import com.rearwave.blog.component.utils.GSON;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 import org.springframework.util.Base64Utils;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
  * 参数解析器，登录相关接口解密专用
  * @author sunyi
  */
+@Log4j2
 public class BlogArgumentMethodResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -36,7 +38,9 @@ public class BlogArgumentMethodResolver implements HandlerMethodArgumentResolver
 
         Class<?> clazz = parameter.getParameterType();
         //base64 解密入参
-        byte[] body = Base64Utils.decode(StreamUtils.copyToByteArray(request.getInputStream()));
+        String enc = StreamUtils.copyToString(request.getInputStream(),StandardCharsets.UTF_8);
+        log.debug("收到的密文：{}",enc);
+        byte[] body = Base64Utils.decodeFromString(enc.replaceAll("\"",""));
 
         return GSON.parseObject(new String(body, StandardCharsets.UTF_8),clazz);
     }

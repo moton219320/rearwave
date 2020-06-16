@@ -1,5 +1,6 @@
 package com.rearwave.blog.config.wrapper;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.util.HtmlUtils;
 
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
  * XSS攻击防御以及preload (即requestBody)内容复用处理
  * @author sunyi
  */
+@Log4j2
 public class RequestBodyServletWrapper extends HttpServletRequestWrapper {
     private final byte[] body;
 
@@ -31,7 +33,8 @@ public class RequestBodyServletWrapper extends HttpServletRequestWrapper {
      */
     public RequestBodyServletWrapper(HttpServletRequest request) throws IOException {
         super(request);
-        this.body = StreamUtils.copyToByteArray(request.getInputStream());
+        ServletInputStream is = request.getInputStream();
+        this.body = StreamUtils.copyToByteArray(is);;
     }
 
     @Override

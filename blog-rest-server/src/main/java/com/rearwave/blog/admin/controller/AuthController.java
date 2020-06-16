@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.code.kaptcha.Producer;
 import com.rearwave.blog.admin.model.Users;
+import com.rearwave.blog.admin.model.vo.VerifyCodeVo;
 import com.rearwave.blog.admin.service.IUsersService;
 import com.rearwave.blog.component.annotation.DecryptBody;
 import com.rearwave.blog.component.exception.GlobalException;
@@ -12,7 +13,6 @@ import com.rearwave.blog.component.spring.service.EmailService;
 import com.rearwave.blog.component.utils.EncryptUtil;
 import com.rearwave.blog.component.utils.GSON;
 import com.rearwave.blog.component.utils.RedisUtil;
-import com.rearwave.blog.component.utils.WebUtils;
 import com.rearwave.blog.model.dto.AuthUserDto;
 import com.rearwave.blog.model.dto.ForgotDto;
 import com.rearwave.blog.model.dto.LoginDto;
@@ -53,7 +53,7 @@ public class AuthController {
     @PostMapping("/login")
     public Object login(@DecryptBody LoginDto login){
         /* 先校验验证码 */
-        String code = RedisUtil.get("verify："+WebUtils.getSessionId());
+        String code = RedisUtil.get("verify:"+login.getToken());
         if (!StringUtils.equals(code,login.getVerifyCode())){
             return R.error("验证码不正确！");
         }
@@ -71,9 +71,11 @@ public class AuthController {
         String token = Base64Utils.encodeToString(DigestUtils.md5Digest(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8)));
         AuthUserDto userDto = new AuthUserDto();
         BeanUtils.copyProperties(user,userDto);
+        userDto.setUserId(user.getId());
+        userDto.setToken(token);
         //保存token信息 ,有效期 7天
         RedisUtil.setEx(token, GSON.toJSONStringWithNullValue(userDto),7, TimeUnit.DAYS);
-        return R.success(token);
+        return R.success(userDto);
     }
 
     /**
@@ -84,13 +86,17 @@ public class AuthController {
     @GetMapping("/getVerifyCode")
     public Object getCode() throws IOException {
         String code = producer.createText();
+        String token = DigestUtils.md5DigestAsHex(code.getBytes());
+        //保存验证码
+        RedisUtil.setEx("verify:"+token,code,3,TimeUnit.MINUTES);
+
         BufferedImage img = producer.createImage(code);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(img,"png",bos);
         String pngBase64 = Base64Utils.encodeToString(bos.toByteArray());
         pngBase64 = pngBase64.replaceAll("\n","").replaceAll("\r","");
 
-        return R.success("data:image/png;base64,"+pngBase64);
+        return R.success(new VerifyCodeVo(token,"data:image/png;base64,"+pngBase64));
     }
 
     @PostMapping("/forgot")

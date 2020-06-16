@@ -1,11 +1,12 @@
 package com.rearwave.blog.admin.model;
 
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -37,9 +38,13 @@ public class BookNote extends Model<BookNote> {
      * 回复笔记id
      */
     private Integer replyId;
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
+    @TableField(fill = FieldFill.INSERT)
     private Integer createUser;
+    @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
+    @TableField(fill = FieldFill.UPDATE)
     private Integer updateUser;
 
 

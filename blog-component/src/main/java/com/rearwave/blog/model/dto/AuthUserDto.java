@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 public class AuthUserDto {
 
-    private Integer id;
+    private Integer userId;
 
     private String username;
 
@@ -25,4 +25,6 @@ public class AuthUserDto {
     private BigDecimal donationAmount;
 
     private Integer gender;
+
+    private String token;
 }

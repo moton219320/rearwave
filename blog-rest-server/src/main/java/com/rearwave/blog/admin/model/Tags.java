@@ -1,13 +1,14 @@
 package com.rearwave.blog.admin.model;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -29,7 +30,9 @@ public class Tags extends Model<Tags> {
      * 0 无效 1 有效
      */
     private Integer status;
+    @TableField(fill = FieldFill.INSERT)
     private Integer createUser;
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
 
