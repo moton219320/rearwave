@@ -6,7 +6,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: "@wecredo2016"
+#    password: "@wecredo2016"
     client-name: redis-client
     lettuce:
       shutdown-timeout: 300ms

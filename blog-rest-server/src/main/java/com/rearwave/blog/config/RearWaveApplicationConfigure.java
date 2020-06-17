@@ -3,10 +3,7 @@ package com.rearwave.blog.config;
 import com.github.pagehelper.PageInterceptor;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import com.rearwave.blog.component.spring.handler.BlogArgumentMethodResolver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -107,6 +104,11 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
                 .registerTypeAdapter(Date.class,(JsonSerializer<Date>) (date, type, jsonSerializationContext)
                         -> new JsonPrimitive(date.getTime()))
                 .setDateFormat(DateFormat.LONG)
+                //兼容时间戳
+                /*.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, jsonDeserializationContext)
+                        -> new Date(jsonElement.getAsJsonPrimitive().getAsLong()))
+                .registerTypeAdapter(Date.class,(JsonDeserializer<Date>) (jsonElement, type, jsonDeserializationContext)
+                        -> new Date(jsonElement.getAsString()))*/
                 .enableComplexMapKeySerialization()
                 .serializeNulls()
                 .create();

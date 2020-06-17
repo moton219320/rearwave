@@ -19,18 +19,18 @@
                     <el-row :gutter="10">
                         <el-col :span="6">
                             <el-form-item label="字典名称">
-                                <el-input v-model="search.dicName" placeholder="输入字典名称" prefix-icon="el-icon-search"
+                                <el-input v-model="search.value" placeholder="输入字典名称" prefix-icon="el-icon-search"
                                           style="margin-left: 5px"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="字典分类">
-                                <el-input v-model="search.dicType" placeholder="输入字典分类" prefix-icon="el-icon-search"
+                                <el-input v-model="search.dicName" placeholder="输入字典分类" prefix-icon="el-icon-search"
                                           style="margin-left: 5px"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-button type="primary" @click="query('form')" style="margin-left: 30px">查询字典</el-button>
+                            <el-button type="primary" @click="submit('form')" style="margin-left: 30px">查询字典</el-button>
                             <el-button type="info" @click="add('form1')">添加字典</el-button>
                         </el-col>
                     </el-row>
@@ -43,9 +43,9 @@
                         style="width: 100%;margin-top: 20px">
                     <el-table-column
                             prop="id"
-                            label="序号"
                             align="center"
-                            width="180">
+                            label="序号"
+                            width="80">
                     </el-table-column>
                     <el-table-column
                             prop="key"
@@ -54,12 +54,12 @@
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="dicName"
+                            prop="value"
                             align="center"
                             label="字典名称">
                     </el-table-column>
                     <el-table-column
-                            prop="dicType"
+                            prop="dicName"
                             align="center"
                             label="字典分类">
                     </el-table-column>
@@ -83,6 +83,7 @@
                 </el-table>
                 <el-pagination
                         style="margin-top: 15px"
+                        @current-change="query"
                         background
                         :page-size="search.pageSize"
                         :pager-count="5"
@@ -100,17 +101,17 @@
                 width="30%"
                 :before-close="handleClose">
             <el-form ref="form1" :model="dic" label-width="80px" :rules="rules">
-                <el-from-item>
-                    <el-input v-model="dic.id" placeholder="placeholder" type="hidden"></el-input>
-                </el-from-item>
+                <el-form-item hidden>
+                    <el-input v-model="dic.id" type="hidden" placeholder="placeholder"></el-input>
+                </el-form-item>
                 <el-form-item label="字典分类" prop="dicType">
-                    <el-input v-model="dic.dicType" placeholder="请输入字典分类"></el-input>
+                    <el-input v-model="dic.dicName" placeholder="请输入字典分类"></el-input>
                 </el-form-item>
                 <el-form-item label="字典key" prop="key">
                     <el-input v-model="dic.key" placeholder="请输入字典key"></el-input>
                 </el-form-item>
                 <el-form-item label="字典名称" prop="dicName">
-                    <el-input v-model="dic.dicName" placeholder="请输入字典名称"></el-input>
+                    <el-input v-model="dic.value" placeholder="请输入字典名称"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-radio-group v-model="dic.status">
@@ -129,6 +130,8 @@
 </template>
 
 <script>
+    import {ajax} from "../../../assets/js/ajax"
+    import api from "../../../assets/js/api"
     export default {
         name: "Dic",
         data(){
@@ -136,49 +139,51 @@
                 dialogVisible:false,
                 search:{
                     dicName:'',
-                    dicType:'',
+                    value:'',
                     pageNum:1,
-                    pageSize:10,
+                    pageSize:8,
                     total:129,
                     pages:0,
-                    rows:[
-                        {
-                            id:1,
-                            key:'1',
-                            dicName:"Java",
-                            dicType:"category",
-                            status:0
-                        }
-                    ]
+                    rows:[]
                 },
                 dic:{
                     dicName:'',
-                    id:null,
                     key:'',
-                    dicType:'',
+                    value:'',
                     status:'',
 
                 },
                 dialogTitle:'添加字典',
                 rules:{
-                    dicName:[
+                    value:[
                         {required: true,message:"字典名称不能为空",trigger:'blur'}
                     ]
                 }
             }
         },
         methods:{
-            query(form){
-                this.$refs[form].validate((valid)=>{
-                    if(valid){
-                        let loading = this.$loading({text:"正在查询..."});
-                        setTimeout(()=>{loading.close()},3500)
+            submit(form){
+                this.$refs[form].validate((valid)=> {
+                    if (valid) {
+                        this.query();
                     }
                 })
-                console.log("查询字典")
             },
-            handleClose(done){
-                console.log(done)
+            query(pageNum){
+                if(pageNum){
+                    this.search.pageNum = pageNum;
+                }
+                let loading = this.$loading({text:"正在查询..."});
+                ajax({
+                    url: api.system.dic.query.uri,
+                    type:"POST",
+                    data:this.search
+                }).then(res => {
+                    this.search = res.data
+                    loading.close();
+                })
+            },
+            handleClose(){
                 this.dic.id=null;
                 this.dic.dicName='';
                 this.dialogVisible=false;
@@ -193,12 +198,22 @@
                 }
                 this.$refs[form].validate((valid)=>{
                     if(valid){
-                        this.$notify({
-                            title:"字典保存成功",
-                            message:"字典将在展示的时候将一些ID转换成对应的描述",
-                            duration:1500
+                        ajax({
+                            url:api.system.dic.save.url,
+                            type:"POST",
+                            data:this.dic
+                        }).then(res => {
+                            if (res.code === 200){
+                                this.$notify({
+                                    title:"字典保存成功",
+                                    message:"字典将在展示的时候将一些ID转换成对应的描述",
+                                    duration:1500
+                                })
+                                this.dialogVisible=false;
+                                this.dic={}
+                            }
                         })
-                        this.dialogVisible=false;
+
                     }
                 })
                 this.$refs[form].resetFields();
@@ -223,13 +238,15 @@
                 this.dialogTitle="编辑字典";
                 this.dic.dicName=row.dicName;
                 this.dic.id=row.id;
-                this.dic.dicType=row.dicType;
+                this.dic.value=row.value;
                 this.dic.key=row.key;
                 this.dic.status=row.status;
                 this.dialogVisible=true;
             },add(){
                 this.dialogVisible=true;
             }
+        },mounted() {
+            this.query(1);
         }
     }
 </script>

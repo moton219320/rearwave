@@ -1,11 +1,20 @@
 package com.rearwave.blog.admin.service.impl;
 
-import com.rearwave.blog.admin.model.Article;
-import com.rearwave.blog.admin.dao.ArticleMapper;
-import com.rearwave.blog.admin.service.IArticleService;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.rearwave.blog.admin.dao.ArticleMapper;
+import com.rearwave.blog.admin.model.Article;
+import com.rearwave.blog.admin.model.dto.ArticleQueryDto;
+import com.rearwave.blog.admin.service.IArticleService;
+import com.rearwave.blog.model.Page;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -28,5 +37,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             
         }
         return false;
+    }
+
+    @Override
+    public Page<Article> selectPage(ArticleQueryDto query) {
+
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        var wrapper = new EntityWrapper<Article>()
+                .like("title",query.getTitle());
+        if (StringUtils.isNotBlank(query.getCategory())){
+            wrapper.eq("category",query.getCategory());
+        }
+        if (StringUtils.isNoneBlank(query.getStatus())){
+            wrapper.eq("status",query.getStatus());
+        }
+        if (!query.getDate().isEmpty()){
+            wrapper.ge("create_time",query.getDate().get(0))
+                    .lt("create_time",DateUtils.addDays(query.getDate().get(1),1));
+        }
+
+
+        List<Article> articles = selectList(wrapper);
+        query.setRows(articles);
+        PageInfo<Article> info = new PageInfo<>(articles);
+        query.setTotal(info.getTotal());
+        return query;
     }
 }

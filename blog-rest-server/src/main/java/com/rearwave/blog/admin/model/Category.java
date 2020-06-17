@@ -2,8 +2,10 @@ package com.rearwave.blog.admin.model;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class Category extends Model<Category> {
     /**
      * 主键
      */
+    @TableId(value = "id_", type = IdType.AUTO)
     private Integer id;
     private String name;
     /**

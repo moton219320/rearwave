@@ -2,6 +2,8 @@ package com.rearwave.blog.admin.service;
 
 import com.rearwave.blog.admin.model.Article;
 import com.baomidou.mybatisplus.service.IService;
+import com.rearwave.blog.admin.model.dto.ArticleQueryDto;
+import com.rearwave.blog.model.Page;
 
 /**
  * <p>
@@ -14,5 +16,8 @@ import com.baomidou.mybatisplus.service.IService;
 public interface IArticleService extends IService<Article> {
 
     boolean saveArticle(Article article);
+
+
+    Page<Article> selectPage(ArticleQueryDto queryDto);
 
 }

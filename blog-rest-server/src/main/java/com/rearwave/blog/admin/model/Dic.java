@@ -1,9 +1,10 @@
 package com.rearwave.blog.admin.model;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,9 @@ import java.io.Serializable;
 public class Dic extends Model<Dic> {
 
     private static final long serialVersionUID = 1L;
+
+    @TableId(value = "id_", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 字典名称

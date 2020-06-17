@@ -77,9 +77,9 @@
             :before-close="handleClose">
       <el-form ref="form" :model="form" label-width="80px" :rules="rules">
         <el-from-item>
-          <el-input v-model="form.tagId" placeholder="placeholder" type="hidden"></el-input>
+          <el-input v-model="form.id" placeholder="placeholder" type="hidden"></el-input>
         </el-from-item>
-        <el-form-item label="标签名称" prop="tagName">
+        <el-form-item label="标签名称" prop="name">
             <el-input v-model="form.name" placeholder="请输入标签名称"></el-input>
         </el-form-item>
       </el-form>
@@ -143,6 +143,7 @@
             this.$message("操作取消")
           },
           query(pageNum){
+            this.search.rows=[]
             if(pageNum){
               this.search.pageNum = pageNum;
             }

@@ -35,7 +35,7 @@
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="标签">
-                                <el-select v-model="search.tags" placeholder="选择标签">
+                                <el-select v-model="search.tags" placeholder="选择标签" value="0">
                                     <el-option label="全部" value="0"></el-option>
                                     <el-option
                                             v-for="item in tags.rows"
@@ -48,7 +48,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="8">
+                        <el-col :span="12">
                             <el-form-item label="发布时间">
                                 <el-date-picker
                                         v-model="search.date"
@@ -62,14 +62,22 @@
                                 </el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
-                            <div style="width: 100%;height: 1px"></div>
+                        <el-col :span="6">
+                            <el-form-item label="文章类型">
+                                <el-select v-model="search.type" placeholder="请选择文章类型">
+                                    <el-option value="0" label="全部"></el-option>
+                                    <el-option value="1" label="图文"></el-option>
+                                    <el-option value="2" label="视频"></el-option>
+                                    <el-option value="3" label="图集"></el-option>
+                                    <el-option value="4" label="碎语"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </el-col>
-                        <el-col :span="4">
-                            <el-button type="primary" @submit="submit('form')">查询文章</el-button>
+                        <el-col :span="3">
+                            <el-button type="primary" @click="submit('form')">查询文章</el-button>
                         </el-col>
-                        <el-col :span="4">
-                            <el-button type="info" @click="dialogVisible=true">添加文章</el-button>
+                        <el-col :span="3">
+                            <el-button type="info" @click="publish">发布文章</el-button>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -88,6 +96,13 @@
                             align="center"
                             label="文章名称"
                             width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="type"
+                            align="center"
+                            label="文章类型"
+                            :formatter="getValue"
+                            width="100">
                     </el-table-column>
                     <el-table-column
                             prop="category"
@@ -133,6 +148,8 @@
 
 <script>
     import {getDicValue,formatDate} from "../../../assets/js/util";
+    import {ajax} from "../../../assets/js/ajax";
+    import api from "../../../assets/js/api";
 
     export default {
         name: "ArticleList",
@@ -142,21 +159,14 @@
                 search:{
                     title:'',
                     pageNum:1,
-                    pageSize:10,
+                    pageSize:8,
                     total:129,
-                    date:'',
+                    date:[],
+                    type:'',
                     pages:0,
                     category:'',
                     tags:'',
-                    rows:[
-                        {
-                            id:1,
-                            title:"测试标题1",
-                            category:1,
-                            syncStatus:3,
-                            createDate:new Date().getTime()
-                        }
-                    ]
+                    rows:[]
                 },
                 category:{
                     rows:[
@@ -204,8 +214,26 @@
             }
         },
         methods:{
-            submit(){
-
+            submit(form){
+                this.$refs[form].validate((valid)=> {
+                    if (valid) {
+                        this.query();
+                    }
+                })
+            },query(pageNum){
+                if(pageNum){
+                    this.search.pageNum = pageNum;
+                }
+                let loading = this.$loading({text:"正在查询..."});
+                ajax({
+                    url: api.article.query.uri,
+                    type:"POST",
+                    data:this.search
+                }).then(res => {
+                    this.search.total = res.data.total
+                    this.search.rows = res.data.rows
+                    loading.close();
+                })
             },
             handleClose(done){
                 console.log(done)
@@ -231,19 +259,42 @@
                     });
                 });
             },editArticle(row){
-                console.log(row)
+                // console.log(row)
                 this.dialogTitle="编辑文章";
-                this.form.CategoryName=row.name
-                this.form.CategoryId=row.id;
+                this.form.name=row.name
+                this.form.id=row.id;
                 this.dialogVisible=true;
             },
-            getValue(row,column){
-                console.log(column)
+            getValue(row){
                 return getDicValue(row.id,this.category.rows,'name')
             },
             format(row){
-                return formatDate(row.createDate);
+                return formatDate(row.createDate,"yyyy/MM/dd hh:mm:ss");
+            },publish(){
+                this.$router.push("/article")
             }
+        },mounted() {
+            ajax({
+                url:api.tags.query.uri,
+                type:"POST",
+                data:{
+                    pageNum:1,
+                    pageSize:999
+                }
+            }).then(res => {
+                this.tags.rows = res.data.rows;
+            })
+            ajax({
+                url:api.category.query.uri,
+                type:"POST",
+                data:{
+                    pageNum:1,
+                    pageSize:999
+                }
+            }).then(res => {
+                this.category.rows = res.data.rows;
+            })
+            this.query();
         }
     }
 </script>

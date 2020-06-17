@@ -2,6 +2,7 @@ package com.rearwave.blog.admin.controller;
 
 
 import com.rearwave.blog.admin.model.Article;
+import com.rearwave.blog.admin.model.dto.ArticleQueryDto;
 import com.rearwave.blog.admin.service.IArticleService;
 import com.rearwave.blog.component.response.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,12 @@ public class ArticleController {
 
     @PostMapping("/save")
     public Object save(@RequestBody Article article){
-        return R.success(articleService.insertOrUpdate(article));
+        return R.success(articleService.saveArticle(article));
+    }
+
+    @PostMapping("/query")
+    public Object query(@RequestBody ArticleQueryDto queryDto){
+        return R.success(articleService.selectPage(queryDto));
     }
 
 }

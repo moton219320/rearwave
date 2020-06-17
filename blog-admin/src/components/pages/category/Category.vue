@@ -24,10 +24,10 @@
                 </el-form>
                 <el-divider></el-divider>
                 <el-table
-                        :data="[{ date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄' }, { date: '2016-05-04', name: '王小虎', address: '上海市普陀区金沙江路 1517 弄' }]"
+                        :data="search.rows"
                         style="width: 100%;margin-top: 20px">
                     <el-table-column
-                            prop="index"
+                            prop="id"
                             label="序号"
                             align="center"
                             width="180">
@@ -39,8 +39,9 @@
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="date"
+                            prop="createTime"
                             align="center"
+                            :formatter="format"
                             label="创建时间">
                     </el-table-column>
                     <el-table-column
@@ -75,10 +76,10 @@
                 :before-close="handleClose">
             <el-form ref="form" :model="form" label-width="80px" :rules="rules">
                 <el-from-item>
-                    <el-input v-model="form.CategoryId" placeholder="placeholder" type="hidden"></el-input>
+                    <el-input v-model="form.id" placeholder="placeholder" type="hidden"></el-input>
                 </el-from-item>
                 <el-form-item label="分类名称" prop="CategoryName">
-                    <el-input v-model="form.CategoryName" placeholder="请输入分类名称"></el-input>
+                    <el-input v-model="form.name" placeholder="请输入分类名称"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -90,40 +91,69 @@
 </template>
 
 <script>
+    import {formatDate} from "../../../assets/js/util";
+    import {ajax} from "../../../assets/js/ajax";
+    import api from "../../../assets/js/api";
+
     export default {
         name: "Category",
         data(){
             return {
                 dialogVisible:false,
                 search:{
-                    CategoryName:'',
+                    name:'',
                     pageNum:1,
-                    pageSize:10,
-                    total:129,
+                    pageSize:8,
+                    total:0,
                     pages:0,
+                    rows:[]
                 },
                 form:{
-                    CategoryName:'',
-                    CategoryId:null
+                    name:'',
+                    id:null
                 },
                 dialogTitle:'添加分类',
                 rules:{
-                    CategoryName:[
+                    name:[
                         {required: true,message:"分类名称不能为空",trigger:'blur'}
                     ]
                 }
             }
         },
+        mounted(){
+            this.query();
+        },
         methods:{
-            submit(){
-
+            submit(form){
+                this.$refs[form].validate(valid => {
+                    console.log(valid)
+                    if (valid) {
+                        this.query();
+                    }
+                })
+            },
+            format(row,col,v){
+                return v?formatDate(v,"yyyy-MM-dd hh:mm:ss"):"-";
             },
             handleClose(done){
                 console.log(done)
-                this.form.CategoryId=null;
-                this.form.CategoryName='';
+                this.form.id=null;
+                this.form.name='';
                 this.dialogVisible=false;
                 this.$message("操作取消")
+            },
+            query(pageNum){
+                this.search.rows = []
+                if(pageNum){
+                    this.search.pageNum = pageNum;
+                }
+                ajax({
+                    url:api.category.query.uri,
+                    type:"POST",
+                    data:this.search
+                }).then(res=>{
+                    this.search = res.data;
+                })
             },
             saveCategory(flag){
                 if(!flag){
@@ -131,12 +161,26 @@
                     this.dialogVisible=false;
                     return
                 }
-                this.$notify({
-                    title:"分类保存成功",
-                    message:"您可以在创作文章的时候指定对应的分类哦",
-                    duration:1500
+                ajax({
+                    url:api.category.save.uri,
+                    type:"POST",
+                    data:this.form
+                }).then(res => {
+                    if (res.code === 200) {
+                        this.$notify({
+                            title:"分类保存成功",
+                            message:"您可以在创作文章的时候指定对应的分类哦",
+                            duration:1500
+                        })
+                        this.dialogVisible=false;
+                        //刷新列表
+                        this.form = {}
+                        this.query();
+                    }else{
+                        this.$alert(res.msg);
+                    }
                 })
-                this.dialogVisible=false;
+
             },delCategory(row){
                 this.$confirm('确认删除分类【'+row.name+"】？", '提示', {
                     confirmButtonText: '确定',
@@ -156,8 +200,8 @@
             },editCategory(row){
                 console.log(row)
                 this.dialogTitle="编辑分类";
-                this.form.CategoryName=row.name
-                this.form.CategoryId=row.id;
+                this.form.name=row.name
+                this.form.id=row.id;
                 this.dialogVisible=true;
             }
         }
