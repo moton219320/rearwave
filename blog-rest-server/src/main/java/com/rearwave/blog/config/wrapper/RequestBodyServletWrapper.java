@@ -77,7 +77,7 @@ public class RequestBodyServletWrapper extends HttpServletRequestWrapper {
     @Override
     public String[] getParameterValues(String name) {
         String[] vs =  super.getParameterValues(name);
-        return (String[]) Arrays.stream(vs).map(HtmlUtils::htmlEscape).toArray();
+        return Arrays.stream(vs).map(HtmlUtils::htmlEscape).toArray(String[]::new);
     }
 
     private String stripXSS(String value) {

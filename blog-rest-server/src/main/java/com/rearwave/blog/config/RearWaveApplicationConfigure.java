@@ -26,7 +26,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -113,8 +112,8 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
                 .create();
         gsonHttpMessageConverter.setGson(gson);
         //设置支持的媒体类型
-        gsonHttpMessageConverter.setSupportedMediaTypes(Arrays
-                .asList(MediaType.APPLICATION_JSON
+        gsonHttpMessageConverter.setSupportedMediaTypes(
+                List.of(MediaType.APPLICATION_JSON
                         ,MediaType.APPLICATION_FORM_URLENCODED
                         ,MediaType.TEXT_PLAIN));
         //将Gson转换器放到第一的位置
