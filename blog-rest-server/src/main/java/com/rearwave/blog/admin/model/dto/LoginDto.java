@@ -1,4 +1,4 @@
-package com.rearwave.blog.model.dto;
+package com.rearwave.blog.admin.model.dto;
 
 import lombok.Data;
 

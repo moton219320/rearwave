@@ -37,6 +37,7 @@ public class AttachController {
     @SneakyThrows
     @PostMapping("upload")
     public Object uplaod(@RequestParam MultipartFile file){
+
         if (file.isEmpty()){
             return R.error("文件上传失败");
         }

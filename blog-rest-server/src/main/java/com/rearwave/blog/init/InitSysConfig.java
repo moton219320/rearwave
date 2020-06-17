@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
  */
 @Order(1)
 @Log4j2
-@Component("initSysConfig")
-@DependsOn("dataSource")
+@Component
+@DependsOn({"dataSource"})
 public class InitSysConfig {
 
 
@@ -36,7 +36,6 @@ public class InitSysConfig {
     @PostConstruct
     public void init() {
         MutablePropertySources propertySources = environment.getPropertySources();
-
         List<Config> configs = configMapper.selectList(null);
         Map<String,String> conf = configs.stream()
                 .collect(Collectors.toMap(Config::getConfigKey,Config::getConfigValue)) ;

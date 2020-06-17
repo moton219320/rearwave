@@ -19,7 +19,7 @@
           <el-form-item label="标签">
             <el-input v-model="search.name" placeholder="输入标签名称"  prefix-icon="el-icon-search" style="margin-left: 5px"></el-input>
           </el-form-item>
-          <el-button type="primary" @submit="submit('form')" style="margin-left: 30px">查询标签</el-button>
+          <el-button type="primary" @click="submit('form')" style="margin-left: 30px">查询标签</el-button>
           <el-button type="info" @click="dialogVisible=true">添加标签</el-button>
         </el-form>
         <el-divider></el-divider>
@@ -57,6 +57,7 @@
           </el-table-column>
         </el-table>
         <el-pagination
+                @current-change="query"
                 style="margin-top: 15px"
                 background
                 :page-size="search.pageSize"
@@ -102,7 +103,7 @@
             search:{
               name:'',
               pageNum:1,
-              pageSize:10,
+              pageSize:8,
               total:0,
               pages:0,
               rows:[]
@@ -123,11 +124,16 @@
           this.query();
         },
         methods:{
-          submit(){
-
+          submit(form){
+            this.$refs[form].validate(valid => {
+              console.log(valid)
+              if (valid) {
+                this.query();
+              }
+            })
           },
           format(row,col,v){
-            return formatDate(v);
+            return v?formatDate(v,"yyyy-MM-dd hh:mm:ss"):"-";
           },
           handleClose(done){
             console.log(done)
@@ -136,7 +142,10 @@
             this.dialogVisible=false;
             this.$message("操作取消")
           },
-          query(){
+          query(pageNum){
+            if(pageNum){
+              this.search.pageNum = pageNum;
+            }
             ajax({
               url:api.tags.query.uri,
               type:"POST",

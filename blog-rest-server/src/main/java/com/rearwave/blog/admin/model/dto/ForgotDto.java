@@ -1,4 +1,4 @@
-package com.rearwave.blog.model.dto;
+package com.rearwave.blog.admin.model.dto;
 
 import lombok.Data;
 
@@ -13,4 +13,6 @@ public class ForgotDto {
     private String phone;
 
     private String email;
+
+    private String validCode;
 }

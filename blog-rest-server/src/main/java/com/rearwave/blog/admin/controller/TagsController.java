@@ -4,7 +4,7 @@ package com.rearwave.blog.admin.controller;
 import com.rearwave.blog.admin.model.Tags;
 import com.rearwave.blog.admin.service.ITagsService;
 import com.rearwave.blog.component.response.R;
-import com.rearwave.blog.model.dto.TagsQueryDto;
+import com.rearwave.blog.admin.model.dto.TagsQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +36,11 @@ public class TagsController {
     @PostMapping("/query")
     public Object query(@RequestBody TagsQueryDto query){
         return R.success(tagsService.selectPage(query));
+    }
+
+    @GetMapping("/del/{id}")
+    public Object del(@PathVariable String id){
+        return R.success(tagsService.deleteById(id));
     }
 }
 

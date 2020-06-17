@@ -14,8 +14,8 @@ import com.rearwave.blog.component.utils.EncryptUtil;
 import com.rearwave.blog.component.utils.GSON;
 import com.rearwave.blog.component.utils.RedisUtil;
 import com.rearwave.blog.model.dto.AuthUserDto;
-import com.rearwave.blog.model.dto.ForgotDto;
-import com.rearwave.blog.model.dto.LoginDto;
+import com.rearwave.blog.admin.model.dto.ForgotDto;
+import com.rearwave.blog.admin.model.dto.LoginDto;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -103,6 +103,11 @@ public class AuthController {
     public Object forgotPass(@DecryptBody ForgotDto forgot){
         //验证用户存不存在，并向用户的邮箱发送重置密码的邮件
         return R.success(usersService.forgotPass(forgot));
+    }
+
+    @GetMapping("/validMail")
+    public Object validMail(String email){
+        return R.success(usersService.validMail(email));
     }
 
     @Autowired

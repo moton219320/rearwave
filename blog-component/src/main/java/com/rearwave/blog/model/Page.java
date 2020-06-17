@@ -15,7 +15,7 @@ public class Page<T> {
 
     private int pageSize = 10;
 
-    private int total = 0;
+    private long total = 0L;
 
     private int pages = 0;
 

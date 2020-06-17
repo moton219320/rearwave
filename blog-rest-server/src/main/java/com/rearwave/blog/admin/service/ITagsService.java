@@ -3,7 +3,7 @@ package com.rearwave.blog.admin.service;
 import com.rearwave.blog.admin.model.Tags;
 import com.baomidou.mybatisplus.service.IService;
 import com.rearwave.blog.model.Page;
-import com.rearwave.blog.model.dto.TagsQueryDto;
+import com.rearwave.blog.admin.model.dto.TagsQueryDto;
 
 /**
  * <p>

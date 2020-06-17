@@ -1,17 +1,18 @@
 package com.rearwave.blog.config;
 
-import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
+import com.github.pagehelper.PageInterceptor;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import com.rearwave.blog.component.spring.handler.BlogArgumentMethodResolver;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -73,14 +74,16 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
      * @param
      */
     private CorsConfiguration corsConfig() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        CorsConfiguration cors = new CorsConfiguration();
     /* 请求常用的三种配置，*代表允许所有，当时你也可以自定义属性（比如header只能带什么，只能是post方式等等） */
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setMaxAge(3600L);
-        return corsConfiguration;
+        cors.addAllowedOrigin("*");
+        cors.addAllowedHeader("*");
+        cors.addAllowedMethod(HttpMethod.GET);
+        cors.addAllowedMethod(HttpMethod.POST);
+        cors.addAllowedMethod(HttpMethod.OPTIONS);
+        cors.setAllowCredentials(true);
+        cors.setMaxAge(3600L);
+        return cors;
     }
 
     @Bean
@@ -100,17 +103,22 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
         gsonHttpMessageConverter.setDefaultCharset(StandardCharsets.UTF_8);
-        GsonBuilder builder = new GsonBuilder();
         //序列化日期为时间戳
-        builder.registerTypeAdapter(Date.class,
-                (JsonSerializer<Date>) (date, type, jsonSerializationContext)
-                        -> new JsonPrimitive(date.getTime())).setDateFormat(DateFormat.LONG);
-        gsonHttpMessageConverter.setGson(builder.create());
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class,(JsonSerializer<Date>) (date, type, jsonSerializationContext)
+                        -> new JsonPrimitive(date.getTime()))
+                .setDateFormat(DateFormat.LONG)
+                .enableComplexMapKeySerialization()
+                .serializeNulls()
+                .create();
+        gsonHttpMessageConverter.setGson(gson);
         //设置支持的媒体类型
-        gsonHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON
-                ,MediaType.APPLICATION_FORM_URLENCODED,MediaType.TEXT_PLAIN));
-
-       converters.add(gsonHttpMessageConverter);
+        gsonHttpMessageConverter.setSupportedMediaTypes(Arrays
+                .asList(MediaType.APPLICATION_JSON
+                        ,MediaType.APPLICATION_FORM_URLENCODED
+                        ,MediaType.TEXT_PLAIN));
+        //将Gson转换器放到第一的位置
+        converters.add(0,gsonHttpMessageConverter);
     }
 
     @Bean
@@ -134,8 +142,23 @@ public class RearWaveApplicationConfigure implements WebMvcConfigurer {
 
 
     @Bean
-    @ConditionalOnClass(PaginationInterceptor.class)
-    public PaginationInterceptor paginationInterceptor(){
-        return new PaginationInterceptor();
+    public PageInterceptor paginationInterceptor(){
+        PageInterceptor pageInterceptor = new PageInterceptor();
+        Properties properties = new Properties();
+        /*
+         * 默认为false，会将RowBounds第一个参数offset当成pageNum页面使用
+         * 和startPage中的pageNum效果一样
+         */
+        properties.setProperty("offsetAsPageNum","true");
+        /*RowBounds方式是否做count查询 默认false*/
+        properties.setProperty("rowBoundsWithCount","true");
+        /*分页合理化，true开启，如果分页参数不合理会自动修正。默认false不启用*/
+        properties.setProperty("reasonable","true");
+        /*是否允许接口方法参数来传递分页参数 默认false*/
+        properties.setProperty("supportMethodsArguments","true");
+        pageInterceptor.setProperties(properties);
+        /*当设置为true的时候，如果pageSize设置为0（或RowBounds的limit=0），就不执行分页*/
+        properties.setProperty("pageSizeZero","true");
+        return pageInterceptor;
     }
 }

@@ -1,5 +1,6 @@
-package com.rearwave.blog.model.dto;
+package com.rearwave.blog.admin.model.dto;
 
+import com.rearwave.blog.admin.model.Tags;
 import com.rearwave.blog.model.Page;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TagsQueryDto extends Page {
+public class TagsQueryDto extends Page<Tags> {
 
-    private String tagName;
+    private String name;
 }
