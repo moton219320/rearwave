@@ -3,8 +3,6 @@ import VueRouter from "vue-router";
 
 
 import Article from "./components/pages/article/Article";
-import Video from "./components/pages/article/Video";
-import Gallery from "./components/pages/article/Gallery";
 import ArticleList from "./components/pages/article/ArticleList";
 import Category from "./components/pages/category/Category";
 import Tags from "./components/pages/tags/Tags";
@@ -35,12 +33,6 @@ let routes = [
         component:Article
     },
     {
-        path:'/video',
-        component: Video
-    },{
-        path: '/galley',
-        component: Gallery
-    },{
         path:'/articles',
         component: ArticleList
     },{

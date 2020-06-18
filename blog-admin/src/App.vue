@@ -43,11 +43,11 @@
 
 
             </el-header>
-            <el-row :gutter="10" class="tac">
-                <el-col :span="5" style="width: 15%;min-width: 180px">
+            <el-row :gutter="10" class="tac" style="height: 100%;overflow:hidden; zoom:1;position: relative">
+                <el-col :span="5" style="width: 15%;min-width: 180px;">
                     <Menu msg="系统菜单"></Menu>
                 </el-col>
-                <el-col :span="19">
+                <el-col :span="19" style="height:100%;">
                     <el-main>
                         <router-view></router-view>
                     </el-main>

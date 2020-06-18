@@ -1,11 +1,11 @@
 <template>
-    <h1>article edit</h1>
+    <h1>闲言碎语</h1>
 
 </template>
 
 <script>
     export default {
-        name: "ArticleEdit"
+        name: "Twitter"
     }
 </script>
 
