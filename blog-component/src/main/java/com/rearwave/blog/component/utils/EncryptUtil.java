@@ -1,6 +1,5 @@
 package com.rearwave.blog.component.utils;
 
-import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -27,10 +26,10 @@ public final class EncryptUtil {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         System.out.println(encryptPassword("123456","admin"));
         System.out.println(new String(Base64Utils.encode("{\"username\":\"admin\",\"password\":\"123456\",\"verifyCode\":\"4b8696\"}".getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8));
 
         System.out.println(new String(Base64Utils.decodeFromString("eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJ2ZXJpZnlDb2RlIjoiNGI4Njk2In0="),StandardCharsets.UTF_8));
-    }
+    }*/
 }

@@ -48,7 +48,4 @@ public class R<T> {
 
 
 
-    public static void main(String[] args) {
-        System.out.println(error("通用失败"));
-    }
 }
