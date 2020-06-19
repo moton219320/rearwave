@@ -14,13 +14,13 @@
             <el-col :span="24">
                 <el-form ref="form" :model="search" label-width="80px"  style="margin-top: 15px">
                     <el-row :gutter="10">
-                        <el-col :span="8">
+                        <el-col :span="10">
                             <el-form-item label="文章名称">
                                 <el-input v-model="search.title" placeholder="输入文章名称"
                                           prefix-icon="el-icon-search"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="7" class="col-align-l">
                             <el-form-item label="分类" >
                                 <el-select v-model="search.category" placeholder="选择分类">
                                     <el-option label="全部" value="0"></el-option>
@@ -33,7 +33,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="7" class="col-align-l">
                             <el-form-item label="标签">
                                 <el-select v-model="search.tags" placeholder="选择标签" value="0">
                                     <el-option label="全部" value="0"></el-option>
@@ -48,8 +48,8 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="12">
-                            <el-form-item label="发布时间">
+                        <el-col :span="10" class="col-align-l">
+                            <el-form-item label="发布时间" >
                                 <el-date-picker
                                         v-model="search.date"
                                         type="daterange"
@@ -62,9 +62,9 @@
                                 </el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="8" class="col-align-l">
                             <el-form-item label="文章类型">
-                                <el-select v-model="search.type" placeholder="请选择文章类型">
+                                <el-select v-model="search.type" placeholder="请选择文章类型" style="width: 180px">
                                     <el-option value="0" label="全部"></el-option>
                                     <el-option value="1" label="图文"></el-option>
                                     <el-option value="2" label="视频"></el-option>

@@ -1,5 +1,5 @@
 <template>
-    <el-aside style="background-color: #545c64;width: 100%;min-width: 180px;height: 100%;height:100%;margin-bottom:-1900px; padding-bottom:1900px;overflow-x: hidden">
+    <el-aside style="background-color: #545c64;width: 100%;min-width: 180px;">
         <el-menu  class="el-menu-vertical-demo" mode="vertical"
                   background-color="#545c64"
                   text-color="#fff"
@@ -81,6 +81,10 @@
         overflow-x: hidden;
         min-height: 700px;
         background-color:#545c64;
+        height: 100%;
+        margin-bottom:-900px;
+        padding-bottom:900px;
+        overflow-y: hidden;
     }
     .el-menu {
         height: auto;

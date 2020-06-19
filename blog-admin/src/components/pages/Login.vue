@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-on:keyup.enter="onSubmit('loginForm')">
         <el-form ref="loginForm" :model="form"  :rules="rules" label-width="80px" class="login-box">
             <h3 class="login-title">欢迎登录</h3>
             <el-form-item label="账号" prop="username">
@@ -12,7 +12,7 @@
                 <el-input v-model="form.verifyCode" placeholder="请输入验证码" style="width: 120px;margin-right: 30px" />
                 <el-image  alt="点击刷新" :src="verifyImg" @click="refresh" style="vertical-align: middle;" />
             </el-form-item>
-            <el-button type="primary" @click="onSubmit('loginForm')">登录</el-button>
+            <el-button type="primary" @click="onSubmit('loginForm')" >登录</el-button>
         </el-form>
 
         <el-dialog
@@ -77,7 +77,6 @@
                     if (valid) {
                         let data = JSON.stringify(this.form);
                         let enc = base64.encode(data)
-                        console.log(data)
                         console.log(enc)
                         ajax({
                             url:api.auth.login.url,

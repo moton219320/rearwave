@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <div v-if="login">
+    <div id="app" >
+        <div v-if="login" >
             <el-header style="height: auto;vertical-align: middle">
                 <el-row :gutter="10">
                     <el-col :span="20">
@@ -43,11 +43,12 @@
 
 
             </el-header>
-            <el-row :gutter="10" class="tac" style="height: 100%;overflow:hidden; zoom:1;position: relative">
-                <el-col :span="5" style="width: 15%;min-width: 180px;">
+            <el-row :gutter="10" class="tac" style="width: 98%" >
+                <el-col :span="5"
+                        :style="{'min-height':appHeight+'px','width': '15%','min-width': '180px','overflow': 'hidden'}">
                     <Menu msg="系统菜单"></Menu>
                 </el-col>
-                <el-col :span="19" style="height:100%;">
+                <el-col :span="19" :style="{'min-height':appHeight+'px','position':'relative'}">
                     <el-main>
                         <router-view></router-view>
                     </el-main>
@@ -59,7 +60,7 @@
                 </div>
             </el-footer>
         </div>
-        <div v-else>
+        <div v-else :style="{'min-height': appHeight+'px','overflow-y':'visible'}">
             <Login @loginSuccess="loginSuccess" :isLogin="login"></Login>
         </div>
     </div>
@@ -101,11 +102,13 @@
         },
         data() {
             return {
+                appHeight:750,
                 headerMenu: false,
                 login: false,
                 user:{
                     username:'冷落清秋',
                     userId:'',
+                    avatar:''
                 }
             }
         },
@@ -125,7 +128,9 @@
                 this.login = true;
                 this.user = JSON.parse(localStorage.getItem("user"));
             }
-
+           /* document.onresize = () => {
+                this.appHeight = document.body.clientHeight - 160;
+            }*/
         }
     }
 </script>
@@ -133,6 +138,8 @@
 <style>
     html, body {
         margin: 0;
+        padding: 0;
+        height: 100%;
     }
 
     #app {
