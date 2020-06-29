@@ -6,10 +6,7 @@ import com.rearwave.blog.admin.model.dto.ArticleQueryDto;
 import com.rearwave.blog.admin.service.IArticleService;
 import com.rearwave.blog.component.response.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -36,5 +33,22 @@ public class ArticleController {
         return R.success(articleService.selectPage(queryDto));
     }
 
+    @GetMapping("/sync/{id}")
+    public Object sync(@PathVariable Integer id){
+        Article prop = new Article();
+        prop.setId(id);
+        prop.setSyncStatus(1);
+        return R.success(articleService.saveArticle(prop));
+    }
+
+    @GetMapping("/del/{id}")
+    public Object del(@PathVariable Integer id){
+        return R.success(articleService.deleteById(id));
+    }
+
+    @GetMapping("/view/{id}")
+    public Object get(@PathVariable Integer id){
+        return R.success(articleService.selectById(id));
+    }
 }
 

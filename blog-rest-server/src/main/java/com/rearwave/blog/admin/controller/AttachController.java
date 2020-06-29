@@ -35,7 +35,7 @@ public class AttachController {
     private IAttachService attachService;
 
     @SneakyThrows
-    @PostMapping("upload")
+    @PostMapping("/image")
     public Object uplaod(@RequestParam MultipartFile file){
 
         if (file.isEmpty()){
@@ -63,6 +63,12 @@ public class AttachController {
         attach.setCreateTime(new Date());
         attachService.insert(attach);
         return R.success(attach);
+    }
+
+
+    @PostMapping("video")
+    public Object uploadVideo(){
+        return null;
     }
 }
 

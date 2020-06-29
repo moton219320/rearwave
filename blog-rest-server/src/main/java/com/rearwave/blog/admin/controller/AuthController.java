@@ -4,25 +4,22 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.code.kaptcha.Producer;
 import com.rearwave.blog.admin.model.Users;
+import com.rearwave.blog.admin.model.dto.ForgotDto;
+import com.rearwave.blog.admin.model.dto.LoginDto;
 import com.rearwave.blog.admin.model.vo.VerifyCodeVo;
 import com.rearwave.blog.admin.service.IUsersService;
 import com.rearwave.blog.component.annotation.DecryptBody;
-import com.rearwave.blog.component.exception.GlobalException;
 import com.rearwave.blog.component.response.R;
-import com.rearwave.blog.component.spring.service.EmailService;
 import com.rearwave.blog.component.utils.EncryptUtil;
 import com.rearwave.blog.component.utils.GSON;
 import com.rearwave.blog.component.utils.RedisUtil;
 import com.rearwave.blog.model.dto.AuthUserDto;
-import com.rearwave.blog.admin.model.dto.ForgotDto;
-import com.rearwave.blog.admin.model.dto.LoginDto;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,18 +96,29 @@ public class AuthController {
         return R.success(new VerifyCodeVo(token,"data:image/png;base64,"+pngBase64));
     }
 
+
+    /**
+     * 校验邮箱验证码并发送重置密码链接到邮箱
+      * @param forgot
+     * @return
+     */
     @PostMapping("/forgot")
     public Object forgotPass(@DecryptBody ForgotDto forgot){
         //验证用户存不存在，并向用户的邮箱发送重置密码的邮件
         return R.success(usersService.forgotPass(forgot));
     }
 
+    /**
+     * 校验邮箱有效性，并发送邮箱验证码
+     * @param email 邮箱地址
+     * @return
+     */
     @GetMapping("/validMail")
     public Object validMail(String email){
         return R.success(usersService.validMail(email));
     }
 
-    @Autowired
+  /*  @Autowired
     private EmailService emailService;
     @GetMapping("sendMail")
     public Object testMail(){
@@ -129,5 +137,5 @@ public class AuthController {
             throw new GlobalException(e);
         }
         return R.success();
-    }
+    }*/
 }
