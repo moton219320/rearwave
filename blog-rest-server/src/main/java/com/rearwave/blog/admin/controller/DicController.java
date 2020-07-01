@@ -6,10 +6,7 @@ import com.rearwave.blog.admin.model.dto.DicQueryDto;
 import com.rearwave.blog.admin.service.IDicService;
 import com.rearwave.blog.component.response.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -26,13 +23,20 @@ public class DicController {
     private IDicService dicService;
 
     @PostMapping("/query")
-    public Object Query(@RequestBody DicQueryDto queryDto){
+    public Object query(@RequestBody DicQueryDto queryDto){
         return R.success(dicService.selectPage(queryDto));
     }
 
     @PostMapping("/save")
     public Object save(@RequestBody Dic dic){
         return R.success(dic.insertOrUpdate());
+    }
+
+    @GetMapping("/enable/{id}")
+    public Object enable(@PathVariable Integer id){
+        Dic dic = dicService.selectById(id);
+        dic.setStatus(1-dic.getStatus());
+        return R.success(dicService.updateById(dic));
     }
 
 }

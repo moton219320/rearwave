@@ -3,6 +3,7 @@ package com.rearwave.blog.admin.controller;
 
 import com.rearwave.blog.admin.model.Attach;
 import com.rearwave.blog.admin.service.IAttachService;
+import com.rearwave.blog.component.exception.GlobalException;
 import com.rearwave.blog.component.response.R;
 import com.rearwave.blog.component.utils.SpringUtil;
 import com.rearwave.blog.component.utils.WebUtils;
@@ -38,21 +39,26 @@ public class AttachController {
     @PostMapping("/image")
     public Object uplaod(@RequestParam MultipartFile file){
 
+
+        return R.success(saveFile(SpringUtil.getProperty("upload.local.image"),file));
+    }
+
+    @SneakyThrows
+    private Attach saveFile(String directory,MultipartFile file){
         if (file.isEmpty()){
-            return R.error("文件上传失败");
+            throw new GlobalException("上传文件失败");
         }
-        String uploadDir = SpringUtil.getProperty("uploadDir");
 
         String filename = file.getOriginalFilename();
         String ext = filename.substring(filename.lastIndexOf(".")+1);
         String name = DigestUtils.md5DigestAsHex(file.getBytes());
         Integer userId = WebUtils.getUserId();
         String path = String.join("/",userId.toString(), DateFormatUtils.format(new Date(),"yyyyMMdd"));
-        File dir = new File(String.join("/",uploadDir,path));
+        File dir = new File(String.join("/",directory,path));
         if (!dir.exists()){
             dir.mkdirs();
         }
-        file.transferTo(new File(String.join("/",uploadDir,path,name+"."+ext)));
+        file.transferTo(new File(String.join("/",directory,path,name+"."+ext)));
         Attach attach = new Attach();
         attach.setFilename(filename);
         attach.setFilePath(path);
@@ -62,13 +68,17 @@ public class AttachController {
         attach.setCreateUser(userId);
         attach.setCreateTime(new Date());
         attachService.insert(attach);
-        return R.success(attach);
+        return attach;
+    }
+    @PostMapping("video")
+    public Object uploadVideo(@RequestParam MultipartFile file) {
+
+        return R.success(saveFile(SpringUtil.getProperty("upload.local.video"),file));
     }
 
-
-    @PostMapping("video")
-    public Object uploadVideo(){
-        return null;
+    @PostMapping("file")
+    public Object uploadFile(@RequestParam MultipartFile file){
+        return R.success(saveFile(SpringUtil.getProperty("upload.local.file"),file));
     }
 }
 

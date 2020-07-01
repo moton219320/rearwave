@@ -2,6 +2,8 @@ package com.rearwave.blog.admin.service;
 
 import com.rearwave.blog.admin.model.Link;
 import com.baomidou.mybatisplus.service.IService;
+import com.rearwave.blog.admin.model.dto.LinkQueryDto;
+import com.rearwave.blog.model.Page;
 
 /**
  * <p>
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface ILinkService extends IService<Link> {
 
+
+    Page<Link> selectPage(LinkQueryDto queryDto);
 }
