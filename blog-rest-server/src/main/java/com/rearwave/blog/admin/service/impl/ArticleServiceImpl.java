@@ -1,5 +1,6 @@
 package com.rearwave.blog.admin.service.impl;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,12 +50,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (StringUtils.isNotBlank(query.getCategory())){
             wrapper.eq("category",query.getCategory());
         }
-        if (StringUtils.isNoneBlank(query.getStatus())){
+        if (StringUtils.isNotBlank(query.getStatus())){
             wrapper.eq("status",query.getStatus());
         }
         if (!query.getDate().isEmpty()){
             wrapper.ge("create_time",query.getDate().get(0))
                     .lt("create_time",DateUtils.addDays(query.getDate().get(1),1));
+        }
+        if(!query.getTags().isBlank()){
+            wrapper.like("tags",query.getTags()+",", SqlLike.LEFT)
+                    .or()
+                    .like("tags",","+query.getTags()+",")
+                    .or().like("tags",","+query.getTags(),SqlLike.RIGHT);
         }
 
 
@@ -62,5 +70,34 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         PageInfo<Article> info = new PageInfo<>(articles);
         query.setTotal(info.getTotal());
         return query;
+    }
+
+    public static void main(String[] args) {
+        ArticleQueryDto query = new ArticleQueryDto();
+        query.setCategory("1");
+        query.setDate(List.of(new Date(),new Date()));
+        query.setStatus("1");
+        query.setTags("3");
+        query.setTitle("测试");
+        var wrapper = new EntityWrapper<Article>()
+                .like("title",query.getTitle());
+        if (StringUtils.isNotBlank(query.getCategory())){
+            wrapper.eq("category",query.getCategory());
+        }
+        if (StringUtils.isNoneBlank(query.getStatus())){
+            wrapper.eq("status",query.getStatus());
+        }
+        if (!query.getDate().isEmpty()){
+            wrapper.ge("create_time",query.getDate().get(0))
+                    .lt("create_time",DateUtils.addDays(query.getDate().get(1),1));
+        }
+        if(!query.getTags().isBlank()){
+            wrapper.like("tags",query.getTags()+",", SqlLike.LEFT)
+                    .or()
+                    .like("tags",","+query.getTags()+",")
+                    .or().like("tags",","+query.getTags(),SqlLike.RIGHT);
+        }
+
+        System.out.println(wrapper.getSqlSegment());
     }
 }

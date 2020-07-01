@@ -22,7 +22,10 @@
                     <el-form-item label="重复新密码" prop="newpwd2">
                         <el-input v-model="change.newpwd2" placeholder="再次输入新密码"></el-input>
                     </el-form-item>
-                    <el-button type="primary" @click="submit" >提交</el-button>
+                    <el-form-item style="text-align: center">
+                        <el-button type="primary" @click="submit" style="width: 150px">提交</el-button>
+                    </el-form-item>
+
                 </el-form>
             </el-col>
         </el-row>

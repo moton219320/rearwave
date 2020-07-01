@@ -1,14 +1,20 @@
 import axios from 'axios'
+import vue from 'vue'
+
 //创建axios实例
 const service = axios.create({
     timeout: 30000 //超时时间
 })
 
+let loading;
 //添加request拦截器
 service.interceptors.request.use(config => {
     if (localStorage.getItem("token")){
         config.headers.common["token"] = localStorage.getItem("token");
     }
+    loading = vue.prototype.$loading({
+        text:"处理中......"
+    })
     return config;
 }, error => {
     Promise.reject(error);
@@ -18,10 +24,24 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
     response => {
         let {data} = response;
+        if (data.code === 201){
+            vue.prototype.$message.warning(data.msg);
+            localStorage.clear();
+            loading.close();
+            // vue.prototype.$router.push("/unauthorized")
+            window.location.href="/#/";
+            window.location.reload();
+        }else if (data.code!==200){
+            vue.prototype.$message.error(data.msg);
+        }
+        setTimeout(()=>{
+            loading.close();
+        },500)
+
         return data;
     },
     error => {
-        if (error.response && error.response.status == 404) {
+        if (error.response && error.response.status === 404) {
             //跳转到xx页面
             console.log("404错误")
         }

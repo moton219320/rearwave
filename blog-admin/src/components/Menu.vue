@@ -1,14 +1,13 @@
 <template>
-    <el-aside style="background-color: #545c64;width: 100%;min-width: 180px;">
+    <el-aside style="width: 100%;min-width: 180px;">
         <el-menu  class="el-menu-vertical-demo" mode="vertical"
-                  background-color="#545c64"
-                  text-color="#fff"
-                  active-text-color="#ffd04b"
                   :default-openeds=openeds
                   router
                   @open="handleOpen"
                   @select="handleSelect">
-            <el-menu-item index="/meter" style="height: 70px;line-height:70px;font-size: 18px;font-weight: 800"><i class="el-icon-odometer"></i>DashBoard</el-menu-item>
+            <el-menu-item index="/meter" style="height: 70px;line-height:70px;font-size: 18px;font-weight: 800">
+                <i class="el-icon-odometer"></i>DashBoard
+            </el-menu-item>
             <el-submenu index="article">
                 <template slot="title">
                     <i class="el-icon-edit"></i>
@@ -80,7 +79,6 @@
     .el-aside{
         overflow-x: hidden;
         min-height: 700px;
-        background-color:#545c64;
         height: 100%;
         margin-bottom:-900px;
         padding-bottom:900px;

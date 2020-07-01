@@ -10,18 +10,26 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row :gutter="10">
+        <el-row :gutter="10" style="margin-top: 30px">
             <el-col :span="2">
                 <div style="width: 50px;min-height: 100px"></div>
             </el-col>
             <el-col :span="20">
-                <el-form ref="form" :model="search" label-width="60px" class="el-form--inline el-tabs--left" style="margin-top: 15px">
-                    <el-form-item label="分类">
-                        <el-input v-model="search.CategoryName" placeholder="输入分类名称"  prefix-icon="el-icon-search"></el-input>
-                    </el-form-item>
-                    <el-button type="primary" @submit="submit('form')">查询分类</el-button>
-                    <el-button type="info" @click="dialogVisible=true">添加分类</el-button>
-                </el-form>
+                <el-row :gutter="10">
+                    <el-form ref="form" :model="search" label-width="80px"  >
+                        <el-col :span="10">
+                            <el-form-item label="分类">
+                                <el-input v-model="search.CategoryName" placeholder="输入分类名称"  prefix-icon="el-icon-search"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-button type="primary" @submit="submit('form')">查询分类</el-button>
+                            <el-button type="info" @click="dialogVisible=true">添加分类</el-button>
+                        </el-col>
+
+                    </el-form>
+                </el-row>
+
                 <el-divider></el-divider>
                 <el-table
                         :data="search.rows"
@@ -57,7 +65,7 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination
-                        style="margin-top: 15px"
+                        style="margin-top: 15px;text-align: center"
                         background
                         :page-size="search.pageSize"
                         :pager-count="5"

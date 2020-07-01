@@ -82,7 +82,7 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination
-                        style="margin-top: 15px"
+                        style="margin-top: 15px;text-align: center"
                         @current-change="query"
                         background
                         :page-size="search.pageSize"

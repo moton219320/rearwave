@@ -21,6 +21,10 @@ Vue.use(VueRouter);
 
 let routes = [
     {
+        path:"/unauthorized",
+        redirect:"/login"
+    },
+    {
         path:"/dic",
         component: Dic
     },

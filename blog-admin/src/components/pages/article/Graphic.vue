@@ -22,7 +22,7 @@
                 </el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="5">
+                <el-col :span="6">
                     <el-form-item label="文章分类：">
                         <el-select v-model="form.category" placeholder="请选择文章分类">
                             <el-option
@@ -77,7 +77,7 @@
             </el-row>
             <el-row :gutter="10">
                 <el-col :span="24">
-                    <el-form-item label="文章内容">
+                    <el-form-item label="文章内容：">
                         <mavon-editor
                                 v-model="form.content"
                                 ref="md"
@@ -88,7 +88,7 @@
 
                 </el-col>
             </el-row>
-            <el-row :gutter="10">
+            <el-row :gutter="10" style="text-align: center">
                 <el-col :span="24">
                     <el-button type="info" style="width: 150px">草稿</el-button>
                     <el-button type="primary" style="width: 150px;margin-left: 40px">发布</el-button>

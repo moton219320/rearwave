@@ -146,7 +146,6 @@
         font-family: Avenir, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        text-align: center;
         color: #FFFFFF;
         background-color: #FFFFFF;
         height: 100%;
@@ -175,4 +174,5 @@
     el-form{
         border-radius: 8px;
     }
+
 </style>

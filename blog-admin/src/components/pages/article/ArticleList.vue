@@ -11,16 +11,16 @@
         </el-row>
         <el-divider></el-divider>
         <el-row :gutter="10">
-            <el-col :span="24">
-                <el-form ref="form" :model="search" label-width="80px"  style="margin-top: 15px">
+
+                <el-form ref="form" :model="search" label-width="80px" class=""  style="margin-top: 15px;">
                     <el-row :gutter="10">
-                        <el-col :span="10">
+                        <el-col :span="8">
                             <el-form-item label="文章名称">
                                 <el-input v-model="search.title" placeholder="输入文章名称"
                                           prefix-icon="el-icon-search"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="7" class="col-align-l">
+                        <el-col :span="5" class="col-align-l">
                             <el-form-item label="分类" >
                                 <el-select v-model="search.category" placeholder="选择分类">
                                     <el-option label="全部" value="0"></el-option>
@@ -33,9 +33,9 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="7" class="col-align-l">
+                        <el-col :span="6" class="col-align-l">
                             <el-form-item label="标签">
-                                <el-select v-model="search.tags" placeholder="选择标签" value="0">
+                                <el-select v-model="search.tags" placeholder="选择标签" value="0" style="width: 100%">
                                     <el-option label="全部" value="0"></el-option>
                                     <el-option
                                             v-for="item in tags.rows"
@@ -48,12 +48,12 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="10" class="col-align-l">
+                        <el-col :span="8" class="col-align-l">
                             <el-form-item label="发布时间" >
                                 <el-date-picker
                                         v-model="search.date"
                                         type="daterange"
-                                        align="center"
+                                        style="width: 100%"
                                         unlink-panels
                                         range-separator="至"
                                         start-placeholder="开始日期"
@@ -62,9 +62,9 @@
                                 </el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" class="col-align-l">
+                        <el-col :span="5" class="col-align-l">
                             <el-form-item label="文章类型">
-                                <el-select v-model="search.type" placeholder="请选择文章类型" style="width: 180px">
+                                <el-select v-model="search.type" placeholder="请选择文章类型" style="width: 100%">
                                     <el-option value="0" label="全部"></el-option>
                                     <el-option value="1" label="图文"></el-option>
                                     <el-option value="2" label="视频"></el-option>
@@ -73,11 +73,12 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="3">
-                            <el-button type="primary" @click="submit('form')">查询文章</el-button>
+                        <el-col :span="3" style="padding-left: 40px">
+                            <el-button type="primary" @click="submit('form')" >查询文章</el-button>
+
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="info" @click="publish">发布文章</el-button>
+                            <el-button type="info" @click="publish"  style="margin-left: 80px">发布文章</el-button>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -134,14 +135,13 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination
-                        style="margin-top: 15px"
+                        style="margin-top: 15px;text-align: center"
                         background
                         :page-size="search.pageSize"
                         :pager-count="5"
                         layout="prev, pager, next"
                         :total="search.total">
                 </el-pagination>
-            </el-col>
         </el-row>
     </div>
 </template>
@@ -224,7 +224,6 @@
                 if(pageNum){
                     this.search.pageNum = pageNum;
                 }
-                let loading = this.$loading({text:"正在查询..."});
                 ajax({
                     url: api.article.query.uri,
                     type:"POST",
@@ -232,7 +231,6 @@
                 }).then(res => {
                     this.search.total = res.data.total
                     this.search.rows = res.data.rows
-                    loading.close();
                 })
             },
             handleClose(done){
@@ -305,5 +303,7 @@
 }
 .el-form-item__content{
     margin-left: 10px !important;
+    text-align:left !important;
 }
+
 </style>
