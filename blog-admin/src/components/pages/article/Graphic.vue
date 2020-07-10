@@ -99,6 +99,7 @@
 </template>
 
 <script>
+    import {upload} from "@/assets/js/ajax";
     export default {
         name: "Graphic",
         data() {
@@ -137,9 +138,11 @@
             $imgAdd(pos, $file) {
                 let formdata = new FormData();
                 formdata.append("file", $file);
-                this.$upload.post('/上传接口地址', formdata).then(res => {
-                    console.log(res.data);
-                    this.$refs.md.$img2Url(pos, res.data);
+                upload('/attach/image', formdata).then(res => {
+                    console.table(res);
+                    let path = res.data.static+res.data.filePath;
+                    console.log("文件路径 %s",path);
+                    this.$refs.md.$img2Url(pos, path);
                 }).catch(err => {
                     console.log(err)
                 })

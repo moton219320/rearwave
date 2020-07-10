@@ -52,7 +52,7 @@ service.interceptors.response.use(
 //封装get接口
 // params={} 是设置默认值
 export function get(url, params = {}) {
-    params.t = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.
+    params.t_ = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.
     return service({
         url: url,
         method: 'get',
@@ -80,7 +80,7 @@ export function post(url, data = {}) {
 export function upload(url,file = {}){
     //默认配置
     let sendObject = {
-        url: url,
+        url: getUrl(url),
         method: "post",
         headers: {
             'Content-Type': 'multipart/form-data'

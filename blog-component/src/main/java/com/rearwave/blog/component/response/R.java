@@ -1,8 +1,11 @@
 package com.rearwave.blog.component.response;
 
+import com.rearwave.blog.component.utils.GSON;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Map;
 
 /**
  * @author sunyi
@@ -10,22 +13,30 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class R<T> {
+public class R {
 
     private int code;
 
     private String msg;
 
-    private T data;
+    private Object data;
 
     public static R success(){
         return new R(CodeEnum.OK);
     }
 
-    public static <T> R<T> success(T data){
-        R<T> r = new R<>(CodeEnum.OK);
+    public static  R success(Object data){
+        R r = new R(CodeEnum.OK);
         r.setData(data);
         return r;
+    }
+
+    public R push(String key,String value){
+        var data = this.data;
+        Map m = GSON.convert(data, Map.class);
+        m.put(key,value);
+        this.data = m;
+        return this;
     }
 
     private R(CodeEnum codeEnum){
