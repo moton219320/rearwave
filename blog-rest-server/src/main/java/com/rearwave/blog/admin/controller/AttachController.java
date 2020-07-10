@@ -43,12 +43,12 @@ public class AttachController {
     @PostMapping("/image")
     public Object uplaod(MultipartFile file){
 
-        return R.success(saveFile(SpringUtil.getProperty("upload.local.file"),"images",file))
+        return R.success(saveFile("images",file))
                 .push("static",SpringUtil.getProperty("rearwave.static.url"));
     }
 
     @SneakyThrows
-    private Attach saveFile(String directory,String fileType,MultipartFile file){
+    private Attach saveFile(String fileType,MultipartFile file){
         if (file.isEmpty()){
             throw new GlobalException("上传文件失败");
         }
@@ -61,7 +61,7 @@ public class AttachController {
                 fileType,
                 userId.toString(),
                 DateFormatUtils.format(new Date(),"yyyyMMdd"));
-        File dir = new File(String.join("/",directory,path));
+        File dir = new File(String.join("/",SpringUtil.getProperty("upload.local.file"),path));
         if (!dir.exists()){
             dir.mkdirs();
         }
@@ -82,12 +82,12 @@ public class AttachController {
     @PostMapping("video")
     public Object uploadVideo(@RequestParam MultipartFile file) {
 
-        return R.success(saveFile(SpringUtil.getProperty("upload.local.video"),"video",file));
+        return R.success(saveFile("video",file));
     }
 
     @PostMapping("file")
     public Object uploadFile(@RequestParam MultipartFile file){
-        return R.success(saveFile(SpringUtil.getProperty("upload.local.file"),"files",file));
+        return R.success(saveFile("files",file));
     }
 }
 
